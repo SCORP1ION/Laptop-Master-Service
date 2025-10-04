@@ -1,4 +1,4 @@
-package com.servicelm
+package com.RIGR.ServiceLM
 
 import android.os.Build
 import android.os.Bundle

@@ -2,6 +2,19 @@
   "expo": {
     "name": "ServiceLM",
     "slug": "ServiceLM",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "android": {
+      "package": "com.RIGR.ServiceLM"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6a034b4f-084a-4433-86c8-3354dc2fc7fc"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/6a034b4f-084a-4433-86c8-3354dc2fc7fc"
+    },
+    "ios": {}
   }
 }
