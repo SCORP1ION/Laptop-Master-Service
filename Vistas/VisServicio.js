@@ -43,11 +43,11 @@ const VisServicio = () => {
           fontWeight='900'
           backgroundColor='#ffffffff'
           />
-        </View>7
-
+        </View>
+        
         <View style={{padding: 15}}>
           <TextInput style={styles.textBox} 
-          placeholder={`Comentario (opcional)`}
+          placeholder="Comentario opcional"
           placeholderTextColor={'#0a0a0aff'}
           fontWeight='900'
           backgroundColor='#ffffffff'

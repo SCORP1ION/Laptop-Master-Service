@@ -4,9 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import Icon from 'react-native-vector-icons/Entypo'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import VisLogin from './VisLogin';
 import VisInicio from './VisInicio'
-
 
 
 // export const logout = async (navigation) => {
@@ -44,13 +42,7 @@ const DrawerApp=()=>{
             />
         }}/>
 
-       {/* <Drawer.Screen name='Salir' component={logout} options={{
-        title: 'Salir',
-        drawerIcon: config => <MaterialIcons 
-        name="exit-to-app" 
-        size={26} 
-        color="black" />
-       }}/> */}
+        
  
     </Drawer.Navigator>
     )

@@ -1,19 +1,37 @@
 import { StyleSheet, Text, View, ImageBackground } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Image } from 'react-native';
-import Fontisto from '@expo/vector-icons/Fontisto';
 import React from 'react';
 
 import VisServicio from './VisServicio';
 import VisLaptops from './VisLaptops';
 import VisUbicacion from './VisUbicacion';
 import VisPerfil from './VisPerfil';
+
 import { Icon } from 'react-native-elements';
 
 
-const Tab = createBottomTabNavigator();
-function date(){<Fontisto name="date" size={24} color="black" />}
 
+const Tab = createBottomTabNavigator();
+
+const icons = {
+  Servicio: {
+    active: require("../assets/icons/calendario-morado.png"),
+    inactive: require("../assets/icons/calendario-gris.png")
+  },
+  Venta: {
+    active: require("../assets/icons/venta-morado.png"),
+    inactive: require("../assets/icons/venta-gris.png")
+  },
+  Ubicacion: {
+    active: require("../assets/icons/mapa-morado.png"),
+    inactive: require("../assets/icons/mapa-gris.png")
+  },
+  Perfil: {
+    active: require("../assets/icons/usuario-morado.png"),
+    inactive: require("../assets/icons/usuario-gris.png")
+  }
+}
 
 const VisInicio = () => {
   
@@ -26,23 +44,22 @@ const VisInicio = () => {
             <Text
               style={{
                 fontSize: 16,
-                fontWeight: '600',
-                fontFamily: 'Georgia'
+                fontWeight: 600,
+                fontFamily: 'Georgia',
+                color: focused ? '#222feeff' : '#727272ff'
               }}
             >
               {route.name}
             </Text>
           ),
-          tabBarIcon: ({ focused, size, color }) => {
-            let iconName;
-            
-            if(route.name === 'Servicio'){
-              iconName = focused ? date() : null
-            }
-            return <Icon name={iconName} size={15} color={'black'}/>
-          },
-          tabBarActiveTintColor: "tomato",
-          tabBarInactiveTintColor: 'gray'
+          tabBarIcon: ({ focused}) =>(
+            <Image
+              source={
+                focused ? icons[route.name].active : icons[route.name].inactive
+              }
+              style={{width: 24, height: 24}}
+            />
+            ),
         })}
       >
         <Tab.Screen name="Servicio" component={VisServicio} />

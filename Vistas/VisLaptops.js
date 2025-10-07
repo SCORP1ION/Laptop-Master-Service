@@ -1,50 +1,67 @@
-import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,  TouchableOpacity, Image, } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { Avatar, ListItem } from 'react-native-elements'
-
 import VisVerLap from './VisVerLap'
 
+
 const VisLaptops = (props) => {
+
+  const Stack = createStackNavigator();
+
   return (
-    <ScrollView>
-      <View>
+    <View style={styles.conatainer}>
 
-        <View style={styles.Fotos}>
-          <TouchableOpacity
-            onPress={() => props.navigation.navigate('ViVerLap')}
-          >
-            <Avatar
-              rounded title='Laptop'
-              size='large'
-              source={{ uri: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
-              />
-              <ListItem.Title>Acer</ListItem.Title>
-          </TouchableOpacity>
-        </View>
+      <TouchableOpacity style={styles.laptops} onPress={() => route("VisVerLap")}>
+        <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture}></Image>
+         <View style={{paddingTop: 13}}>
+          <Text style={styles.textCharacteristics}>Acer Aspire 1.14 pulgadas</Text>
+          <Text style={styles.textCharacteristics}>Intel Celeron N4020</Text>
+          <Text style={styles.textCharacteristics}>Windows 10 pro</Text>
+         </View>
+      </TouchableOpacity>
 
-        <View style={styles.Fotos}>
-          <TouchableOpacity>
-            <Avatar
-              rounded title='Laptop'
-              size='large'
-              source={{ uri: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
-            />
-            <ListItem.Content>
-              <ListItem.Title>Hp</ListItem.Title>
-            </ListItem.Content>
-          </TouchableOpacity>
-        </View>
-
-      </View>
-    </ScrollView>
+    </View>
   )
 }
 
 export default VisLaptops
 
 const styles = StyleSheet.create({
-  Fotos: {
-    marginLeft: 20,
-    marginTop: 15
+  conatainer: {
+    padding: 15
+  },
+
+  laptops:{
+    borderWidth: 1,
+    width: 350,
+    height: 120,
+    alignSelf: 'center',
+    borderRadius: 30,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    backgroundColor: '#8da1ffff',
+    padding: 2
+  },
+
+  pictureLaptop: {
+    borderWidth: 1,
+    width: 20,
+    height: 20,
+  },
+  
+  picture:{
+    width: 100, 
+    height: 100,
+  },
+  
+  textCharacteristics: {
+    fontWeight: 700,
+    color: '#ffffffff',
+    paddingLeft: 0,
+    paddingTop: 8,
+    width: 200
   }
+
 })
