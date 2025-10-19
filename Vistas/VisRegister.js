@@ -151,7 +151,7 @@ const VisRegister = (props) => {
     <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
 
     <TouchableOpacity>
-        <Avatar 
+        <Avatar
         style={styles.foto}
         size='xlarge'
         onPress={pickImage}
@@ -188,7 +188,7 @@ const VisRegister = (props) => {
         backgroundColor='#ffffffff'
         placeholder='Numero telefonico'
         placeholderTextColor='#0a0a0aff'
-        value={perfil?.perTelefono !== Number ? 'Ingresar numeros validos' : null}
+        value={perfil?.perTelefono}
         fontWeight='900'
         onChangeText={(valor) => InsertarValor('perTelefono', valor)}
       />

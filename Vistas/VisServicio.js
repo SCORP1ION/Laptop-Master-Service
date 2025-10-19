@@ -17,9 +17,9 @@ const VisServicio = () => {
 
   return (
     <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top}} behavior='padding'>
-      <Text style={{fontSize: 18, fontWeight:700, padding: 15, alignSelf: 'center',}}>Formulario para servicio</Text>
+      <Text style={{fontSize: 18, fontWeight:700, padding: 15, alignSelf: 'center'}}>Formulario para servicio</Text>
+      
       <View style={styles.conteiner}>
-
         <View style={{padding: 15}}>
           <TextInput style={styles.textBox} 
           placeholder='¿Cual es el problema?' 
