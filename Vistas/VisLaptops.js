@@ -1,28 +1,30 @@
-import { StyleSheet, Text, View,  TouchableOpacity, Image, } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
-import React from 'react'
-import { Avatar, ListItem } from 'react-native-elements'
-import VisVerLap from './VisVerLap'
+
+import { StyleSheet, Text, View, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 
-const VisLaptops = (props) => {
-
-  const Stack = createStackNavigator();
-
+const VisLaptops = () => {
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  
   return (
-    <View style={styles.conatainer}>
+    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#FFFFFFFF', padding: insets.top}}>
+      <View style={styles.conatainer}>
 
-      <TouchableOpacity style={styles.laptops} onPress={() => route("VisVerLap")}>
-        <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture}></Image>
-         <View style={{paddingTop: 13}}>
+      <TouchableOpacity style={styles.laptops} onPress={() => navigation.navigate('VisVerLap')}>
+        <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture} />
+        <View style={{ paddingTop: 13 }}>
           <Text style={styles.textCharacteristics}>Acer Aspire 1.14 pulgadas</Text>
           <Text style={styles.textCharacteristics}>Intel Celeron N4020</Text>
           <Text style={styles.textCharacteristics}>Windows 10 pro</Text>
-         </View>
+        </View>
       </TouchableOpacity>
-
+      
     </View>
-  )
+    </KeyboardAvoidingView>
+  );
 }
 
 export default VisLaptops

@@ -1,8 +1,6 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { auth } from '../Acceso/Firebase'
-import { Fontisto } from '@expo/vector-icons'
-import { ActivityIndicator } from 'react-native'
 
 const VisLogin = (props) => {
 
@@ -15,7 +13,7 @@ const VisLogin = (props) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        props.navigation.navigate("VMenu")
+        props.navigation.navigate("Vinicio")
       }
     }) 
 
@@ -43,9 +41,9 @@ const VisLogin = (props) => {
         console.log(error)
         if (type == 'success') {
           const { email, name, photoUrl } = user;
-          setTimeout(() => props.navigate('VMenu', { email, name, photoUrl }), 1000)
+          setTimeout(() => props.navigate('Vinicio', { email, name, photoUrl }), 1000)
           handleMessage('Google signing success', 'success')
-          navigation.replace("VMenu")
+          navigation.replace("Vinicio")
         } else {
           handleMessage('Google siging canceled', 'prueba')
         }
@@ -54,7 +52,7 @@ const VisLogin = (props) => {
       })
       .catch(error => {
         console.log(error)
-        handleMessage('A ocurrudo un error, verificar su red e intentar nuevamente ', 'prueba')
+        handleMessage('A ocurrudo un error, verificar su red e intentar nuevamente')
         setGoogleSubmitting(false);
 
       })

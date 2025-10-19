@@ -1,30 +1,76 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Avatar } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native';
+
 
 const VisVerLap = () => {
+
+  const navigation = useNavigation();
+
   return (
-    <ScrollView>
-      <View style={{ alignItems: 'center', flex: 1, flexDirection: 'column' }}>
-        <View style={{paddingTop: 15, alignSelf: 'center'}}>
-          <Avatar rounded title='Laptop'
-            size='large'
-            source={{ uri: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
-          />
-          <Text style={styles.texto}>Laptop Acer</Text>
-          <Text style={styles.texto}>Memoria: 16GB</Text>
-          <Text style={styles.texto}>Procesador: Core i5 8Va generacion</Text>
-          <Text style={styles.texto}>Memoria: 16GB</Text>
+    <KeyboardAvoidingView style={styles.containerPrimary}>
+      <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack() }>
+        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
+        <Text style={{marginLeft: 8, fontWeight: 700}}>regresar</Text>
+      </TouchableOpacity>
+      <View style={{padding: 40}}>
+        <View style={styles.containersecondary}>
+          <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture}></Image>
+          <View style={{paddingTop: 16}}>
+            <Text style={styles.texto}>Acer Aspire 1, 14 Pulgadas, HD</Text>
+            <Text style={styles.texto}>16GB RAM</Text>
+            <Text style={styles.texto}>Windows 10 Pro</Text>
+            <Text style={styles.texto}>Core i5 8Va 2.30GHz</Text>
+            <Text style={styles.texto}>Intel(R) Graphics 630</Text>
+            <Text style={styles.texto}>Disco duro solido 512GB NMVE</Text>
+            <Text style={styles.texto}>$5,000</Text>
+          </View>
         </View>
       </View>
-    </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 export default VisVerLap
 
 const styles = StyleSheet.create({
+
+  containerPrimary:{
+    flex: 1, 
+    alignItems: 'center', 
+    backgroundColor: '#FFFFFF'
+  },
+
+  containersecondary:{
+    backgroundColor: '#F3F3F3',
+    borderRadius: 30,
+    width: 350,
+    height: 580
+  },
+
+  picture: {
+    height: 150,
+    width: 150,
+    alignSelf: 'center',
+  },
+
   texto: {
-    textAlign: 'justify'
+    textAlign: 'center',
+    paddingTop: 15,
+    fontSize: 18,
+    fontWeight: 700
+  },
+
+  flechaIzquierda:{
+    height: 16,
+    width: 15,
+    marginLeft: 5
+  },
+
+  contenedor:{
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'flex-start',
+    marginTop: 9
   }
 })

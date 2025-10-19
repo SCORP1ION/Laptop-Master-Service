@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, ListItem } from 'react-native-elements'
+import conexion, { auth } from '../Acceso/Firebase'
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const VisPerfil = (props) => {
 
@@ -44,16 +46,21 @@ const VisPerfil = (props) => {
     consultaPerfil();
   }, [])
 
+  const insets = useSafeAreaInsets();
   return (
     <ScrollView style={styles.contenedor}>
-      <Text style={styles.titulo}>Perfil</Text>
+      <Text style={{alignItems: 'center',
+    alignSelf: 'center',
+    fontWeight: '700',
+    margin: 15,
+    paddingRight: 15, padding: insets.top}}>Perfil</Text>
       {
         perfil.map((perfil) => {
           return(
           <View key={perfil.id}
           style={styles.titulo}
             bottomDivider
-            onPress={() => props.navigation.navigate('ViConf', {
+            onPress={() => props.navigation.navigate('VisConfPerfil', {
               parId: perfil.id,
               parNomre: perfil.perNombre,
               parEmpresa: perfil.perEmpresa,
@@ -100,13 +107,13 @@ const styles = StyleSheet.create({
     paddingRight: 'auto'
   },
 
-  titulo: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    fontWeight: '700',
-    margin: 15,
-    paddingRight: 15
-  },
+  // titulo: {
+  //   alignItems: 'center',
+  //   alignSelf: 'center',
+  //   fontWeight: '700',
+  //   margin: 15,
+  //   paddingRight: 15
+  // },
   
   texto: {
     fontSize: 15,

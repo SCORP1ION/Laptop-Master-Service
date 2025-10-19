@@ -1,7 +1,9 @@
 import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import React from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const VisServicio = () => {
+  const insets = useSafeAreaInsets();
 
   const confirmarServicio = () => {
     Alert.alert('Nota', 'Nota: La visita del servicio tendra un costo de $350 + revicion, instalcion o solucion de un problema', 
@@ -14,8 +16,8 @@ const VisServicio = () => {
 
 
   return (
-    <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF',}} behavior='padding'>
-      <Text style={{fontSize: 18, fontWeight:700, padding: 15, alignSelf: 'center'}}>Formulario para servicio</Text>
+    <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top}} behavior='padding'>
+      <Text style={{fontSize: 18, fontWeight:700, padding: 15, alignSelf: 'center',}}>Formulario para servicio</Text>
       <View style={styles.conteiner}>
 
         <View style={{padding: 15}}>
