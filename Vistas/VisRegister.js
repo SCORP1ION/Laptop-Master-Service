@@ -94,10 +94,11 @@ const VisRegister = (props) => {
 
  // Estado para los datos del perfil  
   const [perfil, setPerfil] = useState({
+    perDireccion: '',
     perEmail: '',
-    perNombre: '',
     perEmpresa: '',
-    perTelefono: '',
+    perNombre: '',
+    perTel: '',
     contraseña: "",
     confirContraseña: ""
   });
@@ -110,7 +111,7 @@ const VisRegister = (props) => {
   const navigation = useNavigation();
 
   const handleRegister = async () => {
-    if (perfil.perEmail === ' ' || perfil.perNombre === ' ' || perfil.perEmpresa === ' ') {
+    if (perfil.perEmail === ' ' || perfil.perNombre === ' ' || perfil.perDireccion === ' ' || perfil.perEmpresa === '') {
       Alert.alert('Error', 'Por favor completa todos los campos.');
       return;
     }
@@ -129,8 +130,9 @@ const VisRegister = (props) => {
         // uid: user.uid,
         perEmail: perfil.perEmail,
         perNombre: perfil.perNombre,
+        perDireccion: perfil.perDireccion,
         perEmpresa: perfil.perEmpresa,
-        perTelefono: perfil.perTelefono,
+        perTel: perfil.perTel,
         isUser: true
       });
       Alert.alert('¡Registro exitoso!', 'Tu cuenta ha sido creada.');
@@ -144,7 +146,7 @@ const VisRegister = (props) => {
 
   return (
     <KeyboardAvoidingView 
-      style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', padding: insets.top, }}
+      style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', padding: insets.top, marginBottom: insets.bottom}}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Ayuda a que no tape el formulario con la propiedad platform.os y hace una comparativa si es un disposivo android o ios
     >
 
@@ -163,7 +165,7 @@ const VisRegister = (props) => {
           style={styles.textBox}
           backgroundColor='#ffffffff'
           placeholder='Nombre'
-          placeholderTextColor='#0a0a0aff'
+          placeholderTextColor= {'#0a0a0aff'} 
           value={perfil?.perNombre}
           fontWeight='900'
           onChangeText={(valor) => InsertarValor('perNombre', valor)}
@@ -186,11 +188,24 @@ const VisRegister = (props) => {
       <TextInput
         style={[styles.textBox, styles.separado]}
         backgroundColor='#ffffffff'
+        placeholder='Direccion'
+        placeholderTextColor='#0a0a0aff'
+        value={perfil?.perDireccion}
+        fontWeight='900'
+        onChangeText={(valor) => InsertarValor('perDireccion', valor)}
+      />
+      </View>
+
+      <View style={{paddingTop: 15}}>
+      <TextInput
+        style={[styles.textBox, styles.separado]}
+        backgroundColor='#ffffffff'
         placeholder='Numero telefonico'
         placeholderTextColor='#0a0a0aff'
-        value={perfil?.perTelefono}
+        keyboardType='numeric'
+        value={perfil?.perTel}
         fontWeight='900'
-        onChangeText={(valor) => InsertarValor('perTelefono', valor)}
+        onChangeText={(valor) => InsertarValor('perTel', valor)}
       />
       </View>
 
