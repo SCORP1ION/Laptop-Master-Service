@@ -117,7 +117,6 @@ const VisRegister = (props) => {
     }
 
     if(perfil.contraseña !== perfil.confirContraseña){
-      console.log(perfil.contraseña, perfil.confirContraseña)
       Alert.alert('Error', 'Verificar su contraseña')
     }
 
