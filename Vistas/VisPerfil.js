@@ -48,7 +48,7 @@ const VisPerfil = (props) => {
   // Creacion de constante asincrona que espera el llamado de la salida
   const logout = async () => {
     try{
-      await auth.signOut() // signOut funcion que cierre sesion con el auth de firebase
+      await auth.signOut() // signOut funcion que cierre sesion con el auth de firebase.
       navigation.replace('VLogin'); // Con el replace, lo mandamos el login.
       }catch (err){
       console.error("Error al cerrar sesion", err)
