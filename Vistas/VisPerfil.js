@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar, Button, ListItem } from 'react-native-elements'
 import conexion, { auth } from '../Acceso/Firebase'
 import { useCallback } from 'react';
-import { useFocusEffect } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const VisPerfil = (props) => {
+
   useFocusEffect(
     useCallback(() => {
       consultaPerfil();
@@ -14,6 +15,7 @@ const VisPerfil = (props) => {
   );
 
   const [perfil, setPerfil] = useState([])
+  const navigation = useNavigation()
 
   const consultaPerfil = async () => {
     try {
@@ -42,6 +44,16 @@ const VisPerfil = (props) => {
       alert(err.message)
     }
   }
+
+  // Creacion de constante asincrona que espera el llamado de la salida
+  const logout = async () => {
+    try{
+      await auth.signOut() // signOut funcion que cierre sesion con el auth de firebase
+      navigation.replace('VLogin');
+      }catch (err){
+      console.error("Error al cerrar sesion", err)
+      }
+    };
 
   useEffect(() => {
     consultaPerfil();
@@ -86,8 +98,13 @@ const VisPerfil = (props) => {
               <TouchableOpacity style={styles.buttonChange}
                 onPress={() => props.navigation.navigate('ViConf')}
               >
-                <Text style={{ fontSize: 15, textAlign: 'center', fontWeight: 900, color:'white' }}>Cambiar perfil</Text>
+                <Text style={styles.textChange}>Cambiar perfil</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity style={styles.closeSesion} onPress={() => logout()}>
+                <Text style={styles.textChange}>Cerrar sesion</Text>
+              </TouchableOpacity>
+
             </View>
             )
           })
@@ -133,5 +150,20 @@ const styles = StyleSheet.create({
     borderRadius: 20, 
     height: 40, 
     padding: 10 
+  },
+
+  textChange:{
+    fontSize: 15, 
+    textAlign: 'center', 
+    fontWeight: 900, 
+    color:'white'
+  },
+
+  closeSesion:{
+    backgroundColor: '#ff0000ff',
+    borderRadius: 20,
+    height: 40,
+    padding: 10,
+    marginTop: 10,
   }
 })
