@@ -11,7 +11,8 @@ const Stack = createStackNavigator();
 function MyStack(){
   return(
     // retorna una pila para que valla al la vista VisLogin
-    <Stack.Navigator>
+    // ggestureEnabled: false. Bloquea el desplazamiento horizontal de las vistas
+    <Stack.Navigator screenOptions={{gestureEnabled: false}}>
         <Stack.Screen name='VLogin' component={VisLogin} options={{title: 'Iniciar Sesion', headerShown: false}} />
         <Stack.Screen name='Vinicio' component={VisInicio} options={{headerShown: false}}/>
         <Stack.Screen name='ViRegis' component={VisRegister} options={{title: 'Registrarse', headerShown: false}}/>
