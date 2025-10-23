@@ -1,14 +1,15 @@
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const VisVerLap = () => {
 
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   return (
-    <KeyboardAvoidingView style={styles.containerPrimary}>
+    <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top}}>
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack() }>
         <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
         <Text style={{marginLeft: 8, fontWeight: 700}}>regresar</Text>
@@ -34,13 +35,7 @@ const VisVerLap = () => {
 export default VisVerLap
 
 const styles = StyleSheet.create({
-
-  containerPrimary:{
-    flex: 1, 
-    alignItems: 'center', 
-    backgroundColor: '#FFFFFF'
-  },
-
+  
   containersecondary:{
     backgroundColor: '#F3F3F3',
     borderRadius: 30,
@@ -64,7 +59,7 @@ const styles = StyleSheet.create({
   flechaIzquierda:{
     height: 16,
     width: 15,
-    marginLeft: 5
+    marginLeft: 5,
   },
 
   contenedor:{

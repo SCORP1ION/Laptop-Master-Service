@@ -126,13 +126,12 @@ const VisRegister = (props) => {
       // const user = userCredential.user;
       // 2. Insertar datos en Firestore
       await conexion.collection('tblPerfil').add({
-        // uid: user.uid,
         perEmail: perfil.perEmail,
         perNombre: perfil.perNombre,
         perDireccion: perfil.perDireccion,
         perEmpresa: perfil.perEmpresa,
         perTel: perfil.perTel,
-        isUser: true
+        isUser: "User" // Si se registra un usuario nuevo, le asigna el rol de User
       });
       Alert.alert('¡Registro exitoso!', 'Tu cuenta ha sido creada.');
       navigation.navigate('VLogin');

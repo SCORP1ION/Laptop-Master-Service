@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import React from 'react'
 
 const VisUbicacion = () => {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View>
+    <View style={{padding: insets.top}}>
       <Text style={styles.texto}>Nos puedes encontrar en:</Text>
     </View>
   )

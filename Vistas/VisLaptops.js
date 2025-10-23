@@ -1,18 +1,17 @@
 
-import { StyleSheet, Text, View, TouchableOpacity, Image, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 
 const VisLaptops = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   
   return (
-    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#FFFFFFFF', padding: insets.top}}>
-      <View style={styles.conatainer}>
-
+    <KeyboardAvoidingView style={{flex: 1, backgroundColor: '#FFFFFFFF', paddingTop: insets.top}}>
+      <ScrollView style={styles.conatainer}>
+        <Text style={styles.textVenta}>Laptops de venta</Text>
       <TouchableOpacity style={styles.laptops} onPress={() => navigation.navigate('VisVerLap')}>
         <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture} />
         <View style={{ paddingTop: 13 }}>
@@ -22,7 +21,7 @@ const VisLaptops = () => {
         </View>
       </TouchableOpacity>
       
-    </View>
+    </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -64,6 +63,13 @@ const styles = StyleSheet.create({
     paddingLeft: 0,
     paddingTop: 8,
     width: 200
+  },
+
+  textVenta:{
+    alignSelf: 'center',
+    margin: 12,
+    fontSize: 16,
+    fontWeight: 900,
   }
 
 })
