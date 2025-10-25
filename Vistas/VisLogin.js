@@ -1,6 +1,7 @@
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../Acceso/Firebase'
+import conexion, { auth } from '../Acceso/Firebase'
+import { useNavigation } from '@react-navigation/native';
 
 const VisLogin = (props) => {
 
@@ -10,12 +11,14 @@ const VisLogin = (props) => {
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
 
+  const navigation = useNavigation();
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         props.navigation.navigate("Vinicio")
       }
-    }) 
+    })
 
     return unsubscribe
   }, [])
@@ -23,9 +26,32 @@ const VisLogin = (props) => {
   const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(userCredentials => {
+      .then(async userCredentials => {
         const user = userCredentials.user;
-        console.log('Logged in with:', user.email);
+        console.log('Logged in with:', user.uid);
+
+        try {
+          const userAdmin = conexion.collection('tblAdministrador').doc(user?.uid)
+          const adminDoc = await userAdmin.get();
+          if (adminDoc.exists) {
+            console.log("administrador")
+            navigation.navigate('ViAdmin');
+            return;
+          } 
+
+          const users = conexion.collection('tblPerfil').doc(user?.uid);
+          const userDoc = await users.get();
+
+          if(userDoc.exists){
+            console.log("usuario")
+            navigation.navigate('VisInicio')
+          }
+
+        } catch (err) {
+          console.error("Error de registro:", err)
+        }
+
+
       })
       .catch(error => alert(error.message))
   }
@@ -69,8 +95,8 @@ const VisLogin = (props) => {
       style={styles.contenedor}
       behavior="padding"
     >
-      <View style={{height: 230}}>
-        <ImageBackground source={(require ('../images/logo.png'))} style={styles.imagen}></ImageBackground>
+      <View style={{ height: 230 }}>
+        <ImageBackground source={(require('../images/logo.png'))} style={styles.imagen}></ImageBackground>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -95,9 +121,9 @@ const VisLogin = (props) => {
           style={styles.button}
         >
           <Text style={styles.buttonTexto}>Login</Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>
 
-        <Text style={{fontWeight: 900, fontSize: 20, paddingTop: 7}}>Ó</Text>
+        <Text style={{ fontWeight: 900, fontSize: 20, paddingTop: 7 }}>Ó</Text>
 
         <TouchableOpacity
           onPress={() => props.navigation.navigate("ViRegis")}
@@ -153,7 +179,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
-  
+
   buttonOutline: {
     backgroundColor: 'white',
     marginTop: 5,
