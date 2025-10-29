@@ -19,41 +19,43 @@ const VisPerfil = (props) => {
 
   const consultaPerfil = async () => {
     try {
-      const Datos = [];
-      await conexion.collection('tblPerfil').get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const {
-            perNombre,
-            perEmpresa,
-            perDireccion,
-            perEmail,
-            perTel
-          } = doc.data();
-          Datos.push({
-            id: doc.id,
-            perNombre,
-            perEmpresa,
-            perDireccion,
-            perEmail,
-            perTel
-          });
-        })
-        setPerfil(Datos);
-      })
+      const user = auth.currentUser; // Si el usuario ya inició sesión, aquí tendrás su información (uid, email, etc.).
+
+      if (!user) { // Si no hay usuario logueado, muestra una alerta de error y sale de la función (return).
+        Alert.alert("Error", "No hay usuario auntenticado")
+        return
+      }
+
+      const doc = await conexion.collection('tblPerfil').doc(user?.uid).get()
+      if (doc.exists) { // En caso de que exista
+        const data = doc.data();
+        setPerfil([{
+          id: doc.id,
+          perNombre: data.perNombre,
+          perEmpresa: data.perEmpresa,
+          perDireccion: data.perDireccion,
+          perEmail: data.perEmail,
+          perTel: data.perTel
+        }])
+      } else{
+        Alert.alert("Error", "No se encontro el perfil del usuario")
+      }
+
     } catch (err) {
       alert(err.message)
     }
   }
 
+
   // Creacion de constante asincrona que espera el llamado de la salida
   const logout = async () => {
-    try{
+    try {
       await auth.signOut() // signOut funcion que cierre sesion con el auth de firebase.
       navigation.replace('VLogin'); // Con el replace, lo mandamos el login.
-      }catch (err){
+    } catch (err) {
       console.error("Error al cerrar sesion", err)
-      }
-    };
+    }
+  };
 
   useEffect(() => {
     consultaPerfil();
@@ -62,50 +64,50 @@ const VisPerfil = (props) => {
   const insets = useSafeAreaInsets();
 
   return (
-    <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top}}>
-      <Text style={{fontSize: 18, fontWeight:700, padding: 15, alignSelf: 'center'}}>Perfil</Text>
+    <KeyboardAvoidingView style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top }}>
+      <Text style={{ fontSize: 18, fontWeight: 700, padding: 15, alignSelf: 'center' }}>Perfil</Text>
       <View style={styles.container}>
         {
           perfil.map((perfil) => {
-            return(
-            <View key={perfil.id}
-            style={styles.titulo}
-              bottomDivider
-              onPress={() => props.navigation.navigate('VisConfPerfil', {
-                parId: perfil.id,
-                parNomre: perfil.perNombre,
-                parEmpresa: perfil.perEmpresa,
-                parDireccion: perfil.perDireccion,
-                perEmail: perfil.perEmail,
-                parTel: perfil.perTel
-              }
-              )}
-            >
-              <ListItem.Chevron />
-                <Avatar // Foto de perfil
-                style={styles.foto}
-                rounded title='Perfil'
-                size='xlarge'
-                source={{ uri: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
-                />
-                <View style={{paddingTop: 10}}>
-                    <Text style={styles.textPer}>{perfil.perNombre}</Text>
-                    <Text style={styles.textPer}>{perfil.perEmpresa}</Text>
-                    <Text style={styles.textPer}>{perfil.perDireccion}</Text>
-                    <Text style={styles.textPer}>{perfil.perEmail}</Text>
-                    <Text style={styles.textPer}>{perfil.perTel}</Text>
-                </View>
-              <TouchableOpacity style={styles.buttonChange}
-                onPress={() => props.navigation.navigate('ViConf')}
+            return (
+              <View key={perfil.id}
+                style={styles.titulo}
+                bottomDivider
+                onPress={() => props.navigation.navigate('VisConfPerfil', {
+                  parId: perfil.id,
+                  parNomre: perfil.perNombre,
+                  parEmpresa: perfil.perEmpresa,
+                  parDireccion: perfil.perDireccion,
+                  perEmail: perfil.perEmail,
+                  parTel: perfil.perTel
+                }
+                )}
               >
-                <Text style={styles.textChange}>Cambiar perfil</Text>
-              </TouchableOpacity>
+                <ListItem.Chevron />
+                <Avatar // Foto de perfil
+                  style={styles.foto}
+                  rounded title='Perfil'
+                  size='xlarge'
+                  source={{ uri: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+                />
+                <View style={{ paddingTop: 10 }}>
+                  <Text style={styles.textPer}>{perfil.perNombre}</Text>
+                  <Text style={styles.textPer}>{perfil.perEmpresa}</Text>
+                  <Text style={styles.textPer}>{perfil.perDireccion}</Text>
+                  <Text style={styles.textPer}>{perfil.perEmail}</Text>
+                  <Text style={styles.textPer}>{perfil.perTel}</Text>
+                </View>
+                <TouchableOpacity style={styles.buttonChange}
+                  onPress={() => props.navigation.navigate('ViConf')}
+                >
+                  <Text style={styles.textChange}>Cambiar perfil</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity style={styles.closeSesion} onPress={() => logout()}>
-                <Text style={styles.textChange}>Cerrar sesion</Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.closeSesion} onPress={() => logout()}>
+                  <Text style={styles.textChange}>Cerrar sesion</Text>
+                </TouchableOpacity>
 
-            </View>
+              </View>
             )
           })
         }
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    alignItems: 'center', 
+    alignItems: 'center',
     flexDirection: 'column',
     backgroundColor: '#F3F3F3',
     width: 350,
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30
   },
-  
+
   textPer: {
     padding: 10,
     fontSize: 15,
@@ -146,20 +148,20 @@ const styles = StyleSheet.create({
   },
 
   buttonChange: {
-    backgroundColor: '#5B40F2', 
-    borderRadius: 20, 
-    height: 40, 
-    padding: 10 
+    backgroundColor: '#5B40F2',
+    borderRadius: 20,
+    height: 40,
+    padding: 10
   },
 
-  textChange:{
-    fontSize: 15, 
-    textAlign: 'center', 
-    fontWeight: 900, 
-    color:'white'
+  textChange: {
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 900,
+    color: 'white'
   },
 
-  closeSesion:{
+  closeSesion: {
     backgroundColor: '#ff0000ff',
     borderRadius: 20,
     height: 40,
