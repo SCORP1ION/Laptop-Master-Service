@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import VisVerServicios from './VisVerServicios';
 import VisAltaLaptops from './VisAltaLaptops';
 import VisAgregarLaptop from './VisAgregarLaptop';
+import VisPerAdmin from './VisPerAdmin';
+import VisVerLaptop from './VisVerLaptop';
 
 const Tabs = createBottomTabNavigator();
 const Stacks = createStackNavigator();
@@ -23,10 +25,10 @@ const iconos = {
   //   activo: require("../assets/icons/mapa-morado.png"),
   //   inactive: require("../assets/icons/mapa-gris.png")
   // },
-  // Perfil: {
-  //   activo: require("../assets/icons/usuario-morado.png"),
-  //   inactive: require("../assets/icons/usuario-gris.png")
-  // }
+  Perfil: {
+    activo: require("../assets/icons/usuario-morado.png"),
+    inactive: require("../assets/icons/usuario-gris.png")
+  }
 };
 
 function Menu() {
@@ -57,7 +59,7 @@ function Menu() {
     >
       <Tabs.Screen name='Nuevoservicio' component={VisVerServicios}/>
       <Tabs.Screen name='Laptops' component={VisAltaLaptops}/>
-
+      <Tabs.Screen name='Perfil' component={VisPerAdmin}/>
     </Tabs.Navigator>
   )
 
@@ -69,6 +71,7 @@ const VisInicioAdmin = () => {
     <Stacks.Navigator screenOptions={{headerShown: false}}>
       <Stacks.Screen name='Menu' component={Menu}/>
       <Stacks.Screen name='AgregarLaptop' component={VisAgregarLaptop}/>
+      <Stacks.Screen name='ViVerlaptop' component={VisVerLaptop}/>
     </Stacks.Navigator>
   )
 }

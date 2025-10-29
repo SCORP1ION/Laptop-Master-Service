@@ -44,7 +44,7 @@ const VisLogin = (props) => {
 
           if(userDoc.exists){
             console.log("usuario")
-            navigation.navigate('VisInicio')
+            navigation.navigate('Vinicio')
           }
 
         } catch (err) {

@@ -12,7 +12,7 @@ const VisAltaLaptops = () => {
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#FFFFFFFF', paddingTop: insets.top }}>
       <ScrollView style={styles.conatainer}>
         <Text style={styles.textVenta}>Laptops de venta</Text>
-        <TouchableOpacity style={styles.laptops} onPress={() => navigation.navigate('VisVerLap')}>
+        <TouchableOpacity style={styles.laptops} onPress={() => navigation.navigate('ViVerlaptop')}>
           <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture} />
           <View style={{ paddingTop: 13 }}>
             <Text style={styles.textCharacteristics}>Acer Aspire 1.14 pulgadas</Text>
