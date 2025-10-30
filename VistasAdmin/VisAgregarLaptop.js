@@ -15,77 +15,65 @@ const VisAgregarLaptop = () => {
     >
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
         <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
-        <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
+        <Text style={{ marginLeft: 8, fontWeight: '700' }}>regresar</Text>
       </TouchableOpacity>
 
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={styles.textBox}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='Modelo'
             placeholderTextColor={'#0a0a0aff'}
             // value={perfil?.perNombre}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perNombre', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, styles.separado]}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='RAM'
             placeholderTextColor='#0a0a0aff'
             // value={perfil?.perEmpresa}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perEmpresa', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, styles.separado]}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox,{backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='Sistema operativo'
             placeholderTextColor='#0a0a0aff'
             // value={perfil?.perDireccion}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perDireccion', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, styles.separado]}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='Procesador'
             placeholderTextColor='#0a0a0aff'
             // value={perfil?.perTel}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perTel', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={styles.textBox}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='¿Incluye graficos?'
             placeholderTextColor='#0a0a0aff'
             // value={perfil?.perEmail}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perEmail', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={styles.textBox}
-            backgroundColor='#ffffffff'
+            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='Disco duro'
             placeholderTextColor='#0a0a0aff'
-            fontWeight='900'
             // value={perfil?.contraseña}
             onChangeText={(valor) => InsertarValor("contraseña", valor)}
             secureTextEntry
@@ -93,12 +81,10 @@ const VisAgregarLaptop = () => {
         </View>
 
         <View style={{ paddingTop: 15 }}>
-          <TextInput style={styles.textBox}
-            backgroundColor='#ffffffff'
+          <TextInput style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
             placeholder='Precio'
             keyboardType='numeric'
             placeholderTextColor='#0a0a0aff'
-            fontWeight='900'
             // value={perfil?.confirContraseña}
             onChangeText={(valor) => InsertarValor("confirContraseña", valor)}
             secureTextEntry
@@ -132,7 +118,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 
-
   foto: {
     width: 100,
     height: 100,
@@ -164,7 +149,7 @@ const styles = StyleSheet.create({
   textRegister: {
     alignSelf: 'center',
     padding: 15,
-    fontWeight: '900',
+    fontWeight: 900,
     color: '#ffffffff',
     fontSize: 16
   },
