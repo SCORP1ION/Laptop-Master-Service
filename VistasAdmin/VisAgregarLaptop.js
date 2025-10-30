@@ -31,7 +31,7 @@ const VisAgregarLaptop = () => {
     }
 
     try {
-      await conexion.collection('tblLaptos').add({
+      await conexion.collection('tblLaptops').add({
         lapModelo: laptop.lapModelo,
         lapRam: laptop.lapRam,
         lapOs: laptop.lapOs,
