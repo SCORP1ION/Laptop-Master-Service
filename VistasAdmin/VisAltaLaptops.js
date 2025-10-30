@@ -7,7 +7,7 @@ const VisAltaLaptops = () => {
 
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  
+
   return (
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: '#FFFFFFFF', paddingTop: insets.top }}>
       <ScrollView style={styles.conatainer}>

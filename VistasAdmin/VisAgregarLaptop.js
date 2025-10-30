@@ -1,12 +1,54 @@
-import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, TextInput, Platform, Image } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, ScrollView, TextInput, Platform, Image, Alert } from 'react-native'
+import React, { useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
-
+import conexion from '../Acceso/Firebase';
 
 const VisAgregarLaptop = () => {
+
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+
+  const [laptop, setlaptop] = useState({
+    lapModelo: '',
+    lapRam: '',
+    lapOs: '',
+    lapCpu: '',
+    lapGrafica: '',
+    lapDisco: '',
+    lapPrecio: ''
+  })
+
+  const caracteristicas = (campo, valor) => {
+    setlaptop({ ...laptop, [campo]: valor })
+  }
+
+  const publicarLaptop = async () => {
+
+    if (laptop.lapModelo === '' || laptop.lapRam === '' || laptop.lapOs === '' || laptop.lapCpu === '' || laptop.lapGrafica === '' || laptop.lapDisco === '' || laptop.lapPrecio === '') {
+      Alert.alert("Campo incompletos", "Favor de llenar todos los campos")
+      return;
+    }
+
+    try {
+      await conexion.collection('tblLaptos').add({
+        lapModelo: laptop.lapModelo,
+        lapRam: laptop.lapRam,
+        lapOs: laptop.lapOs,
+        lapCpu: laptop.lapCpu,
+        lapGrafica: laptop.lapGrafica,
+        lapDisco: laptop.lapDisco,
+        lapPrecio: laptop.lapPrecio
+      }).then(() => {
+        Alert.alert("Exitoso", "Laptop publicada existosamente")
+        navigation.navigate('Menu')
+      })
+
+    } catch (err) {
+      console.error("Error al mostrar equipos", err)
+    }
+  }
+
 
   return (
     <KeyboardAvoidingView
@@ -21,78 +63,76 @@ const VisAgregarLaptop = () => {
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='Modelo'
             placeholderTextColor={'#0a0a0aff'}
-            // value={perfil?.perNombre}
-            onChangeText={(valor) => InsertarValor('perNombre', valor)}
+            value={laptop?.lapModelo}
+            onChangeText={(valor) => caracteristicas('lapModelo', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='RAM'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.perEmpresa}
-            onChangeText={(valor) => InsertarValor('perEmpresa', valor)}
+            value={laptop?.lapRam}
+            onChangeText={(valor) => caracteristicas('lapRam', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox,{backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='Sistema operativo'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.perDireccion}
-            onChangeText={(valor) => InsertarValor('perDireccion', valor)}
+            value={laptop?.lapOs}
+            onChangeText={(valor) => caracteristicas('lapOs', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='Procesador'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.perTel}
-            onChangeText={(valor) => InsertarValor('perTel', valor)}
+            value={laptop?.lapCpu}
+            onChangeText={(valor) => caracteristicas('lapCpu', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='¿Incluye graficos?'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.perEmail}
-            onChangeText={(valor) => InsertarValor('perEmail', valor)}
+            value={laptop?.lapGrafica}
+            onChangeText={(valor) => caracteristicas('lapGrafica', valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
           <TextInput
-            style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='Disco duro'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.contraseña}
-            onChangeText={(valor) => InsertarValor("contraseña", valor)}
-            secureTextEntry
+            value={laptop?.lapDisco}
+            onChangeText={(valor) => caracteristicas("lapDisco", valor)}
           />
         </View>
 
         <View style={{ paddingTop: 15 }}>
-          <TextInput style={[styles.textBox, {backgroundColor:'#ffffffff', fontWeight:'900'}]}
+          <TextInput style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
             placeholder='Precio'
             keyboardType='numeric'
             placeholderTextColor='#0a0a0aff'
-            // value={perfil?.confirContraseña}
-            onChangeText={(valor) => InsertarValor("confirContraseña", valor)}
-            secureTextEntry
+            value={laptop?.lapPrecio}
+            onChangeText={(valor) => caracteristicas("lapPrecio", valor)}
           />
         </View>
 
       </ScrollView>
-      <TouchableOpacity style={styles.buttomRegister}>
+      <TouchableOpacity style={styles.buttomRegister} onPress={() => publicarLaptop()}>
         <Text style={styles.textRegister}>Publicar laptop</Text>
       </TouchableOpacity>
 
