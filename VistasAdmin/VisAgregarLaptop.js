@@ -31,7 +31,7 @@ const VisAgregarLaptop = () => {
     }
 
     try {
-      await conexion.collection('tblLaptops').add({
+       const docRef = await conexion.collection('tblLaptops').add({
         lapModelo: laptop.lapModelo,
         lapRam: laptop.lapRam,
         lapOs: laptop.lapOs,
@@ -39,12 +39,15 @@ const VisAgregarLaptop = () => {
         lapGrafica: laptop.lapGrafica,
         lapDisco: laptop.lapDisco,
         lapPrecio: laptop.lapPrecio
-      }).then(() => {
-        Alert.alert("Exitoso", "Laptop publicada existosamente")
-        navigation.navigate('Menu')
-      })
+      });
 
+      await conexion.collection('tblLaptops').doc(docRef.id).update({
+        lapId: docRef.id
+      })
+      Alert.alert("Exitoso", "Laptop registrada exitosamente")
+      navigation.navigate("Menu");
     } catch (err) {
+      console.log("Error", err)
       console.error("Error al mostrar equipos", err)
     }
   }

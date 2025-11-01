@@ -43,7 +43,7 @@ const VisAltaLaptops = () => {
         <Text style={styles.textVenta}>Laptops de venta</Text>
 
         {laptop.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 20 }}>No hay laptops registradas</Text>
+          <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16, fontWeight: '900' }}>No hay laptops registradas</Text>
         ) : (
           laptop.map((item, index) => (
             <TouchableOpacity

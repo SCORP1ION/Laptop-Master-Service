@@ -32,7 +32,7 @@ const VisLaptops = () => {
         });
       });
       setlaptop(Datos);
-      console.log("Laptops:", Datos)
+      // console.log("Laptops:", Datos)
     } catch (err) {
       console.error("Error de consulta", err)
     }
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#8da1ffff',
     padding: 2,
+    margin: 10
   },
 
   pictureLaptop: {

@@ -1,12 +1,25 @@
 import { StyleSheet, Text, View, Image, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import conexion from '../Acceso/Firebase';
 
 const VisVerLap = () => {
 
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
+  const [laptops, setLaptops] = useState([])
+
+  // const DescripcionLap = async() => {
+  //   try {
+  //     const DescripLap = await conexion.collection('tblLaptops').get()
+
+  //   } catch (error) {
+  //     console.error("Error al consultar", error)
+  //   }
+
+  // }
 
   return (
     <KeyboardAvoidingView style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top}}>
