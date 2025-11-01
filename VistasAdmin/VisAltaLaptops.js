@@ -26,6 +26,7 @@ const VisAltaLaptops = () => {
           lapOs
         } = doc.data()
         Datos.push({
+          id: doc.id, // Aguarda el id de la laptop generada por firebase
           lapModelo,
           lapCpu,
           lapOs
@@ -49,7 +50,7 @@ const VisAltaLaptops = () => {
             <TouchableOpacity
               key={index}
               style={styles.laptops}
-              onPress={() => navigation.navigate('ViVerlaptop', { laptop: item })}
+              onPress={() => navigation.navigate('ViVerlaptop', { lapId: item.id})} // pasa el id a la siguiente vista de VisVerLaptop
             >
               <Image
                 source={require('../images/imaLaptops/LaptopAcer.png')}

@@ -26,13 +26,13 @@ const VisLaptops = () => {
           lapOs
         } = doc.data()
         Datos.push({
+          id: doc.id,
           lapModelo,
           lapCpu,
           lapOs
         });
       });
       setlaptop(Datos);
-      // console.log("Laptops:", Datos)
     } catch (err) {
       console.error("Error de consulta", err)
     }
@@ -49,7 +49,7 @@ const VisLaptops = () => {
             <TouchableOpacity
               key={index}
               style={styles.laptops}
-              onPress={() => navigation.navigate('VisVerLap', { laptop: item })}
+              onPress={() => navigation.navigate('VisVerLap', { lapId: item.id })}
             >
               <Image
                 source={require('../images/imaLaptops/LaptopAcer.png')}
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#8da1ffff',
     padding: 2,
-    margin: 10
+    margin: 20
   },
 
   pictureLaptop: {
