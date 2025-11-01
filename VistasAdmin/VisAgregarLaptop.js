@@ -44,6 +44,7 @@ const VisAgregarLaptop = () => {
       await conexion.collection('tblLaptops').doc(docRef.id).update({
         lapId: docRef.id
       })
+
       Alert.alert("Exitoso", "Laptop registrada exitosamente")
       navigation.navigate("Menu");
     } catch (err) {
