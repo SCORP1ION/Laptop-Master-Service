@@ -1,5 +1,5 @@
 
-import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform, Image } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Avatar } from 'react-native-elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -149,7 +149,10 @@ const VisRegister = (props) => {
       style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', padding: insets.top, marginBottom: insets.bottom }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Ayuda a que no tape el formulario con la propiedad platform.os y hace una comparativa si es un disposivo android o ios
     >
-
+      <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
+        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
+        <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
+      </TouchableOpacity>
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
 
         <TouchableOpacity>
@@ -256,7 +259,6 @@ const VisRegister = (props) => {
       </TouchableOpacity> */}
 
     </KeyboardAvoidingView >
-
   )
 }
 
@@ -305,5 +307,17 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#ffffffff',
     fontSize: 16
+  },
+
+  contenedor: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'flex-start',
+    marginTop: 9
+  },
+  flechaIzquierda: {
+    height: 16,
+    width: 15,
+    marginLeft: 5,
   },
 })
