@@ -8,6 +8,7 @@ import VisAltaLaptops from './VisAltaLaptops';
 import VisAgregarLaptop from './VisAgregarLaptop';
 import VisPerAdmin from './VisPerAdmin';
 import VisVerLaptop from './VisVerLaptop';
+import VisUbication from './VisUbication';
 
 const Tabs = createBottomTabNavigator();
 const Stacks = createStackNavigator();
@@ -21,10 +22,10 @@ const iconos = {
     activo: require("../assets/icons/venta-morado.png"),
     inactive: require("../assets/icons/venta-gris.png")
   },
-  // Ubicacion: {
-  //   activo: require("../assets/icons/mapa-morado.png"),
-  //   inactive: require("../assets/icons/mapa-gris.png")
-  // },
+  Ubicacion: {
+    activo: require("../assets/icons/mapa-morado.png"),
+    inactive: require("../assets/icons/mapa-gris.png")
+  },
   Perfil: {
     activo: require("../assets/icons/usuario-morado.png"),
     inactive: require("../assets/icons/usuario-gris.png")
@@ -59,6 +60,7 @@ function Menu() {
     >
       <Tabs.Screen name='Nuevoservicio' component={VisVerServicios}/>
       <Tabs.Screen name='Laptops' component={VisAltaLaptops}/>
+      <Tabs.Screen name='Ubicacion' component={VisUbication}/>
       <Tabs.Screen name='Perfil' component={VisPerAdmin}/>
     </Tabs.Navigator>
   )
