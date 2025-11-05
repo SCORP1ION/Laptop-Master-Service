@@ -45,7 +45,7 @@ const VisUbicacion = () => {
             latitude: ubicacion.latitude,
             longitude: ubicacion.longitude,
           }}
-          title='Laptop master #253'
+          title='Laptop master abasolo #253'
           description='Aqui puedes encontrarnos'
         />
       </MapView>
