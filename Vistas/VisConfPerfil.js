@@ -1,155 +1,144 @@
-import { StyleSheet, Text, ScrollView, View, TextInput, TouchableOpacity, Alert, alert } from 'react-native'
+import { StyleSheet, Text, ScrollView, View, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Avatar } from 'react-native-elements'
+import { useRoute, useNavigation } from '@react-navigation/native'
+import conexion, { auth } from '../Acceso/Firebase'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+const VisConfPerfil = () => {
 
-const VisConfPerfil = (props) => {
-
-  const [perfil, setPerfil] = useState({
-    perNombre: '',
-    perEmpresa: '',
-    perDireccion: '',
-    perTel: ''
-  })
-
-  useEffect( ()=> {
-    obtenerPerfilPorId(props.route.params.parId)
-    setPerfil(props.route.params.parNombre)
-  }, [props])
+  const route = useRoute();
+  const navigation = useNavigation();
+  const [perfil, setPerfil] = useState(null);
+  const user = auth.currentUser; // <= variable user que revisa si el usuario existe
+  useEffect(() => {
+    obtenerPerfilPorId();
+  }, []);
 
   const actualizar = (campo, valor) => {
-    setPerfil({ ...perfil, [campo]: valor })
-  }
+    setPerfil({ ...perfil, [campo]: valor });
+  };
 
-  const obtenerPerfilPorId = async (Id) => {
+  const obtenerPerfilPorId = async () => {
+
     try {
-      await conexion.collection('tblPerfil').doc(Id).get().then((documentSnapshot) => {
-        if (documentSnapshot.exists) {
-          setAlumno({
-            perNombre: documentSnapshot.data().perNombre,
-            perEmpresa: documentSnapshot.data().perEmpresa,
-            perDireccion: documentSnapshot.data().perDireccion,
-            perTel: documentSnapshot.data().perTel,
-          })
-        }
-      })
-    } catch (error) {
-      alert(error.message)
-    } 
-  }
-
-  const modificarPerfil = async (Id) => {
-    if (perfil.perNombre === '' || perfil.perEmpresa === '' || perfil.perDireccion === '' || perfil.perTel === '') {
-      Alert.alert('Favor de llenar todos los campos')
-    } else {
-      try {
-        await conexion.collection('tblPerfil').doc(Id).update({
-          perNombre: perfil.perNombre,
-          perEmpresa: perfil.perDireccion,
-          perDireccion: perfil.perDireccion,
-          perTel: perfil.perTel
-        }).then(() => {
-          Alert.alert('Exito', 'Campos cambiados correctamente')
-          props.navigation.navigate('ViPerfil')
-        })
-      } catch (err) {
-        alert(err.message)
+      const perDescripcion = await conexion.collection('tblPerfil').doc(user.uid).get();
+      if (perDescripcion.exists) { // en caso de que exista
+        setPerfil(perDescripcion.data());
       }
+    } catch (error) {
+      console.error("Usuario no encontrado", error);
     }
-  }
+  };
+
+  const modificarPerfil = async () => {
+    if (perfil.perNombre === '' || perfil.perEmpresa === '' || perfil.perDireccion === '' || perfil.perTel === '') {
+      Alert.alert("Error", "Todos los campos son requeridos");
+      return;
+    }
+
+    try {
+      await conexion.collection('tblPerfil').doc(user.uid).update({
+        perNombre: perfil.perNombre,
+        perEmpresa: perfil.perEmpresa,
+        perDireccion: perfil.perDireccion,
+        perTel: perfil.perTel
+      });
+
+      Alert.alert('Éxito', 'Perfil actualizado correctamente');
+      navigation.goBack(); // o navigation.navigate('VisPerfil')
+
+    } catch (err) {
+      Alert.alert("Error al modificar", err.message);
+    }
+  };
 
   const cambiarFoto = () => {
     Alert.alert('Foto', 'Cambiar foto de perfil');
-  }
+  };
 
+  const insets = useSafeAreaInsets();
   return (
-    <ScrollView>
+    <KeyboardAvoidingView style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top }}>
+      <TouchableOpacity style={styles.contenedorFecha} onPress={() => navigation.goBack()}>
+        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
+        <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
+      </TouchableOpacity>
       <View style={styles.contenedor}>
-        <TouchableOpacity
-          onPress={() => cambiarFoto()}
-        >
+        <Text style={styles.textPerfil}>Cambiar perfil</Text>
+        <TouchableOpacity onPress={cambiarFoto}>
           <Avatar
             style={styles.foto}
             size='xlarge'
             rounded
-            source={{ uri: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+            source={{ uri: 'https://i.pravatar.cc/300' }}
           />
         </TouchableOpacity>
 
-        <View style={styles.cuadros}>
-          <Text style={styles.textos}>Nombre completo</Text>
-          <TextInput placeholder='Ingresa tu nombre' style={styles.input}
-            value={perfil.perNombre}
-            onChange={(valor) => actualizar('perNombre', valor)}
+        <View style={{ paddingTop: 15 }}>
+          <TextInput
+            style={styles.textBox}
+            placeholder='Nombre'
+            value={perfil?.perNombre}
+            onChangeText={(valor) => actualizar('perNombre', valor)}
           />
         </View>
 
-        <View style={styles.cuadros}>
-          <Text style={styles.textos}>Nombre de la empresa</Text>
-          <TextInput placeholder='¿Cual es el nombre de su empresa?' style={styles.input}
-            value={perfil.perEmpresa}
-            onChange={(valor) => actualizar('perEmpresa', valor)}
+        <View style={{ paddingTop: 15 }}>
+          <TextInput
+            style={styles.textBox}
+            placeholder='Empresa'
+            value={perfil?.perEmpresa}
+            onChangeText={(valor) => actualizar('perEmpresa', valor)}
           />
         </View>
 
-        <View style={styles.cuadros}>
-          <Text style={styles.textos}>Direccion del lugar</Text>
-          <TextInput placeholder='Ingrese direccion de la empresa' style={styles.input}
-            value={perfil.perDireccion}
-            onChange={(valor) => actualizar('perDireccion', valor)}
+        <View style={{ paddingTop: 15 }}>
+          <TextInput
+            style={styles.textBox}
+            placeholder='Dirección'
+            value={perfil?.perDireccion}
+            onChangeText={(valor) => actualizar('perDireccion', valor)}
           />
         </View>
 
-        <View style={styles.cuadros}>
-          <Text style={styles.textos}>Numero telefonico</Text>
-          <TextInput placeholder='Ingrese el numero telefonico' style={styles.input}
-            value={perfil.perTel}
-            onChange={(valor) => actualizar('perTel', valor)}
+        <View style={{ paddingTop: 15 }}>
+          <TextInput
+            style={styles.textBox}
+            placeholder='Teléfono'
+            keyboardType='numeric'
+            value={perfil?.perTel}
+            onChangeText={(valor) => actualizar('perTel', valor)}
           />
         </View>
 
-        <View style={styles.guardar}>
-          <TouchableOpacity
-            onPress={() => modificarPerfil(props.route.params.parId)}
-          >
-            <Text style={{ textAlign: 'center', fontWeight: 700, fontSize: 18 }}>Guardar cambios</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.guardar} onPress={modificarPerfil}>
+          <Text style={{ textAlign: 'center', fontWeight: 700, fontSize: 18 }}>Guardar cambios</Text>
+        </TouchableOpacity>
 
       </View>
-    </ScrollView>
+    </KeyboardAvoidingView>
   )
-}
+};
+
 
 export default VisConfPerfil
 
 const styles = StyleSheet.create({
-  input: {
-    backgroundColor: '#d7dbdd',
-    textAlign: 'center',
-    borderRadius: 15,
-    fontSize: 18,
-    width: 350,
-    padding: 5
-  },
 
-  cuadros: {
+  textPerfil: {
+    fontSize: 18,
+    fontWeight: 700,
     padding: 15,
-    marginTop: 'auto',
   },
 
   contenedor: {
     alignItems: 'center',
     flexDirection: 'column',
+    backgroundColor: '#F3F3F3',
+    width: 330,
+    height: 420,
+    borderRadius: 30,
     flex: 1
-  },
-
-  textos: {
-    textAlign: 'center',
-    fontWeight: 'bold',
-    fontSize: 18,
-    backgroundColor: '#3498db',
-    borderRadius: 18,
-    padding: 5
   },
 
   guardar: {
@@ -164,5 +153,17 @@ const styles = StyleSheet.create({
     width: 150,
     alignSelf: 'center',
     marginTop: 15
-  }
+  },
+  contenedorFecha: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'flex-start',
+    marginTop: 9
+  },
+
+  flechaIzquierda: {
+    height: 16,
+    width: 15,
+    marginLeft: 5,
+  },
 })

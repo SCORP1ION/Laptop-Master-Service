@@ -11,6 +11,7 @@ import VisLaptops from './VisLaptops';
 import VisUbicacion from './VisUbicacion';
 import VisPerfil from './VisPerfil';
 import VisVerLap from './VisVerLap';
+import VisConfPerfil from './VisConfPerfil';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -77,6 +78,7 @@ const VisInicio = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="VisVerLap" component={VisVerLap}/>
+        <Stack.Screen name="ViConfig" component={VisConfPerfil}/>
       </Stack.Navigator>
   );
 }

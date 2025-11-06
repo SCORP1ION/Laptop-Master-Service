@@ -7,7 +7,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const VisPerfil = (props) => {
-
   useFocusEffect(
     useCallback(() => {
       consultaPerfil();
@@ -30,6 +29,7 @@ const VisPerfil = (props) => {
       if (doc.exists) { // En caso de que exista
         const data = doc.data();
         setPerfil([{
+          uid: user.uid,
           id: doc.id,
           perNombre: data.perNombre,
           perEmpresa: data.perEmpresa,
@@ -45,8 +45,7 @@ const VisPerfil = (props) => {
       alert(err.message)
     }
   }
-
-
+  
   // Creacion de constante asincrona que espera el llamado de la salida
   const logout = async () => {
     try {
@@ -68,20 +67,12 @@ const VisPerfil = (props) => {
       <Text style={{ fontSize: 18, fontWeight: 700, padding: 15, alignSelf: 'center' }}>Perfil</Text>
       <View style={styles.container}>
         {
-          perfil.map((perfil) => {
+          perfil.map((perfil, uid) => {
             return (
               <View key={perfil.id}
                 style={styles.titulo}
                 bottomDivider
-                onPress={() => props.navigation.navigate('VisConfPerfil', {
-                  parId: perfil.id,
-                  parNomre: perfil.perNombre,
-                  parEmpresa: perfil.perEmpresa,
-                  parDireccion: perfil.perDireccion,
-                  perEmail: perfil.perEmail,
-                  parTel: perfil.perTel
-                }
-                )}
+                onPress={() => props.navigation.navigate('ViConfig', { user: perfil.uid })}
               >
                 <ListItem.Chevron />
                 <Avatar // Foto de perfil
@@ -98,7 +89,7 @@ const VisPerfil = (props) => {
                   <Text style={styles.textPer}>{perfil.perTel}</Text>
                 </View>
                 <TouchableOpacity style={styles.buttonChange}
-                  onPress={() => props.navigation.navigate('ViConf')}
+                  onPress={() => props.navigation.navigate('ViConfig')}
                 >
                   <Text style={styles.textChange}>Cambiar perfil</Text>
                 </TouchableOpacity>

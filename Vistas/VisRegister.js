@@ -154,7 +154,6 @@ const VisRegister = (props) => {
         <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
       </TouchableOpacity>
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
-
         <TouchableOpacity>
           <Avatar
             style={styles.foto}
@@ -268,7 +267,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#F3F3F3',
     borderRadius: 30,
-    width: 350,
+    width: 200,
+    height: 100,
     padding: 15,
     flexGrow: 1
   },
