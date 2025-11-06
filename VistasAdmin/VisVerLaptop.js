@@ -10,6 +10,29 @@ const VisVerLaptop = () => {
   const route = useRoute();
   const { lapId } = route.params; // 👈 Recibimos el ID desde la navegación
 
+  // funcion para eliminar
+  const elimiarEquipo = async () => {
+    try {
+      await conexion.collection('tblLaptops').doc(lapId).delete().then(()=> {
+        Alert.alert("Exitoso", "Eliminacion exitosa")
+        navigation.navigate("Menu");
+      });
+    } catch (error) {
+      console.error("Error al borrar", error)
+    }
+  }
+
+  // funcion pricipara para confirmar eliminar
+  const confirEliminar = () => {
+    Alert.alert("Eliminar equipo",
+      "¿Esta seguro que desar elimiar el equipo?",
+      [
+        { text: 'Si', onPress: () => elimiarEquipo(route.lapId) },
+        { text: 'No', onPress: () => Alert.alert("Cacelado", "Eliminacion cancelada") }
+      ]
+    )
+  }
+
   const [laptop, setLaptop] = useState(null);
 
   const consultaLaptop = async () => {
@@ -59,6 +82,10 @@ const VisVerLaptop = () => {
           </View>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.btnDelete} onPress={confirEliminar}>
+        <Text style={styles.textDelete}>Eliminar laptop</Text>
+      </TouchableOpacity>
     </KeyboardAvoidingView>
   );
 };
@@ -66,36 +93,52 @@ const VisVerLaptop = () => {
 export default VisVerLaptop
 
 const styles = StyleSheet.create({
-    containersecondary: {
-        backgroundColor: '#F3F3F3',
-        borderRadius: 30,
-        width: 350,
-        height: 580
-    },
+  containersecondary: {
+    backgroundColor: '#F3F3F3',
+    borderRadius: 30,
+    width: 350,
+    height: 580
+  },
 
-    picture: {
-        height: 150,
-        width: 150,
-        alignSelf: 'center',
-    },
+  picture: {
+    height: 150,
+    width: 150,
+    alignSelf: 'center',
+  },
 
-    texto: {
-        textAlign: 'center',
-        paddingTop: 15,
-        fontSize: 18,
-        fontWeight: 700
-    },
+  texto: {
+    textAlign: 'center',
+    paddingTop: 15,
+    fontSize: 18,
+    fontWeight: 700
+  },
 
-    flechaIzquierda: {
-        height: 16,
-        width: 15,
-        marginLeft: 5,
-    },
+  flechaIzquierda: {
+    height: 16,
+    width: 15,
+    marginLeft: 5,
+  },
 
-    contenedor: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignSelf: 'flex-start',
-        marginTop: 9
-    }
+  contenedor: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignSelf: 'flex-start',
+    marginTop: 9
+  },
+
+  btnDelete: {
+    backgroundColor: '#fd0000ff',
+    width: 320,
+    height: 50,
+    borderRadius: 16,
+    position: 'absolute',
+    bottom: 35
+  },
+  textDelete: {
+    alignSelf: 'center',
+    padding: 15,
+    fontWeight: 900,
+    color: '#ffffffff',
+    fontSize: 16
+  }
 })
