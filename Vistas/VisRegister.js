@@ -1,30 +1,21 @@
 
-import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Avatar } from 'react-native-elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import conexion, { auth } from '../Acceso/Firebase';
-// import { collection, addDoc } from 'firebase/firestore';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 
 const VisRegister = (props) => {
-  // Actualiza el estado del perfil cuando las props cambian 
-  // sin esto nos saldra un alerta de que llena el formulario y no se actualiza
-  useEffect(() => {
-    setPerfil(),
-      setImage()
-  }, [props])
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Configuración de Cloudinary
-  const cloudName = 'dfo7xkwo9'; // Reemplaza con tu cloud name
-  const uploadPreset = 'imgPerfilLM'; // Reemplaza con tu upload preset
+  const cloudName = 'dfo7xkwo9';
+  const uploadPreset = 'imgParaLM';
 
-  // Seleccionar imagen de la galería
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -39,66 +30,15 @@ const VisRegister = (props) => {
       }
     } catch (error) {
       Alert.alert('Error', 'No se pudo seleccionar la imagen');
-      console.log("no se selecciono")
     }
   };
 
-  // Subir imagen a Cloudinary
-  const uploadImage = async () => {
-    if (!image) {
-      Alert.alert('Error', 'Selecciona una imagen primero');
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      // Crear FormData
-      const formData = new FormData();
-      formData.append('file', {
-        uri: image,
-        type: 'image/jpeg', // o el tipo correcto de tu imagen
-        name: 'uploaded_image.jpg'
-      });
-      formData.append('upload_preset', uploadPreset);
-
-      // Subir a Cloudinary
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/upload`,
-        {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      const result = await response.json();
-
-      if (result.secure_url) {
-        Alert.alert('Éxito', 'Imagen subida correctamente');
-        console.log('URL de la imagen:', result.secure_url);
-      } else {
-        Alert.alert('Error', 'No se pudo subir la imagen');
-        console.error("Error en la respuesta:", result);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Error al subir la imagen');
-      console.error("Error en la carga:", error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  // Estado para los datos del perfil  
   const [perfil, setPerfil] = useState({
-    perDireccion: '',
-    perEmail: '',
-    perEmpresa: '',
     perNombre: '',
+    perEmpresa: '',
+    perDireccion: '',
     perTel: '',
+    perEmail: '',
     contraseña: "",
     confirContraseña: ""
   });
@@ -107,38 +47,68 @@ const VisRegister = (props) => {
     setPerfil({ ...perfil, [campo]: valor })
   }
 
-
   const navigation = useNavigation();
 
   const handleRegister = async () => {
-    if (perfil.perEmail === ' ' || perfil.perNombre === ' ' || perfil.perDireccion === ' ' || perfil.perEmpresa === '') {
-      Alert.alert('Error', 'Por favor completa todos los campos.');
+
+    if (!image) {
+      Alert.alert("Imagen requerida", "Selecciona una foto de perfil.");
+      return;
+    }
+
+    if (!perfil.perNombre || !perfil.perEmpresa || !perfil.perDireccion || !perfil.perTel || !perfil.perEmail) {
+      Alert.alert("Error", "Completa todos los campos");
       return;
     }
 
     if (perfil.contraseña !== perfil.confirContraseña) {
-      Alert.alert('Error', 'Verificar su contraseña')
+      Alert.alert("Error", "Las contraseñas no coinciden");
+      return;
     }
 
     try {
-      // 1. Crear usuario en Auth
-      await auth.createUserWithEmailAndPassword(perfil?.perEmail, perfil?.contraseña).then((userCredential) => {
-        const user = userCredential.user;
-        conexion.collection('tblPerfil').doc(user.uid).set({
-          perEmail: perfil.perEmail,
-          perNombre: perfil.perNombre,
-          perDireccion: perfil.perDireccion,
-          perEmpresa: perfil.perEmpresa,
-          perTel: perfil.perTel,
-          role: "user" // Si se registra un usuario nuevo, le asigna el rol de User
-        }).then(() => {
-          // 2. Insertar datos en Firestore
-          Alert.alert('¡Registro exitoso!', 'Tu cuenta ha sido creada.');
-          navigation.replace('VLogin');
-        });
+      // 1. Crear el usuario
+      const userCredential = await auth.createUserWithEmailAndPassword(perfil.perEmail, perfil.contraseña);
+      const user = userCredential.user;
+
+      // 2. Subir imagen usando UID como nombre y carpeta "perfil"
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", {
+        uri: image,
+        type: "image/jpeg",
+        name: `${user.uid}.jpg`,
       });
+      formData.append("upload_preset", uploadPreset);
+      formData.append("folder", "perfil");
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      // console.log("Resultado", result)
+      setUploading(false);
+
+      // 3. Guardar datos del perfil + URL de la imagen
+      await conexion.collection("tblPerfil").doc(user.uid).set({
+        perNombre: perfil.perNombre,
+        perEmpresa: perfil.perEmpresa,
+        perDireccion: perfil.perDireccion,
+        perTel: perfil.perTel,
+        perEmail: perfil.perEmail,
+        role: "user",
+        imgPerfil: result.secure_url // IMPORTANTE
+      });
+
+      Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada");
+      navigation.replace("VLogin");
+
     } catch (error) {
-      Alert.alert('Error de auth', error.message);
+      setUploading(false);
+      Alert.alert("Error", error.message);
+      console.log(error);
     }
   };
 
@@ -151,97 +121,85 @@ const VisRegister = (props) => {
     >
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
         <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
-        <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
+        <Text style={{ marginLeft: '8', fontWeight: '700' }}>regresar</Text>
       </TouchableOpacity>
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={pickImage}>
           <Avatar
             style={styles.foto}
             size='xlarge'
-            onPress={pickImage}
+            rounded
+            source={image ? { uri: image } : require('../assets/icons/user-temporal.png')}
           />
         </TouchableOpacity>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={styles.textBox}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Nombre'
             placeholderTextColor={'#0a0a0aff'}
             value={perfil?.perNombre}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perNombre', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={[styles.textBox, styles.separado]}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Nombre empresa'
             placeholderTextColor='#0a0a0aff'
             value={perfil?.perEmpresa}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perEmpresa', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={[styles.textBox, styles.separado]}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Direccion'
             placeholderTextColor='#0a0a0aff'
             value={perfil?.perDireccion}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perDireccion', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={[styles.textBox, styles.separado]}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Numero telefonico'
             placeholderTextColor='#0a0a0aff'
             keyboardType='numeric'
             value={perfil?.perTel}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perTel', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={styles.textBox}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Correo'
             placeholderTextColor='#0a0a0aff'
             value={perfil?.perEmail}
-            fontWeight='900'
             onChangeText={(valor) => InsertarValor('perEmail', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput
-            style={styles.textBox}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Contraseña'
             placeholderTextColor='#0a0a0aff'
-            fontWeight='900'
             value={perfil?.contraseña}
             onChangeText={(valor) => InsertarValor("contraseña", valor)}
             secureTextEntry
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput style={styles.textBox}
+        <View style={{ paddingTop: '15' }}>
+          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
             backgroundColor='#ffffffff'
             placeholder='Confirmar contraseña'
             placeholderTextColor='#0a0a0aff'
-            fontWeight='900'
             value={perfil?.confirContraseña}
             onChangeText={(valor) => InsertarValor("confirContraseña", valor)}
             secureTextEntry
@@ -249,15 +207,16 @@ const VisRegister = (props) => {
         </View>
 
       </ScrollView>
-      <TouchableOpacity style={styles.buttomRegister} onPress={handleRegister}>
-        <Text style={styles.textRegister}>Crear cuenta</Text>
+      <TouchableOpacity style={[styles.buttomRegister, uploading && { opacity: 0.6 }]}
+        onPress={handleRegister}
+        disabled={uploading}
+      >
+        {uploading ?
+          (<ActivityIndicator size='small' color='#fff' />) : (
+            <Text style={styles.textRegister}>Crear cuenta</Text>
+          )}
       </TouchableOpacity>
-      {/* 
-      <TouchableOpacity style={styles.buttomRegister} onPress={uploadImage}>
-        <Text style={styles.textRegister}>Subir imagen</Text>
-      </TouchableOpacity> */}
-
-    </KeyboardAvoidingView >
+    </KeyboardAvoidingView>
   )
 }
 
@@ -304,7 +263,7 @@ const styles = StyleSheet.create({
   textRegister: {
     alignSelf: 'center',
     padding: 15,
-    fontWeight: '900',
+    fontWeight: 900,
     color: '#ffffffff',
     fontSize: 16
   },

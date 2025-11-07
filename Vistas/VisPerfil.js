@@ -16,6 +16,7 @@ const VisPerfil = (props) => {
   const [perfil, setPerfil] = useState([])
   const navigation = useNavigation()
 
+
   const consultaPerfil = async () => {
     try {
       const user = auth.currentUser; // Si el usuario ya inició sesión, aquí tendrás su información (uid, email, etc.).
@@ -35,9 +36,10 @@ const VisPerfil = (props) => {
           perEmpresa: data.perEmpresa,
           perDireccion: data.perDireccion,
           perEmail: data.perEmail,
-          perTel: data.perTel
+          perTel: data.perTel,
+          imgPerfil: data.imgPerfil || null // data.imgPerfil guarda al registrar/subir imagen
         }])
-      } else{
+      } else {
         Alert.alert("Error", "No se encontro el perfil del usuario")
       }
 
@@ -45,7 +47,7 @@ const VisPerfil = (props) => {
       alert(err.message)
     }
   }
-  
+
   // Creacion de constante asincrona que espera el llamado de la salida
   const logout = async () => {
     try {
@@ -77,9 +79,13 @@ const VisPerfil = (props) => {
                 <ListItem.Chevron />
                 <Avatar // Foto de perfil
                   style={styles.foto}
-                  rounded title='Perfil'
+                  rounded
                   size='xlarge'
-                  source={{ uri: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D' }}
+                  source={
+                    perfil?.imgPerfil
+                      ? { uri: perfil.imgPerfil }
+                      : require('../assets/icons/user-temporal.png') // o algún icono local
+                  }
                 />
                 <View style={{ paddingTop: 10 }}>
                   <Text style={styles.textPer}>{perfil.perNombre}</Text>
