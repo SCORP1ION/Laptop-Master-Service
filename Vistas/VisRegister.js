@@ -267,8 +267,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     backgroundColor: '#F3F3F3',
     borderRadius: 30,
-    width: 200,
-    height: 100,
+    width: 330,
+    height: 480,
     padding: 15,
     flexGrow: 1
   },
