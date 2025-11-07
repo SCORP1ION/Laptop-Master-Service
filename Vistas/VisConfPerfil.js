@@ -78,6 +78,8 @@ const VisConfPerfil = () => {
           <TextInput
             style={styles.textBox}
             placeholder='Nombre'
+            placeholderTextColor='#0a0a0aff'
+            fontWeight='900'
             value={perfil?.perNombre}
             onChangeText={(valor) => actualizar('perNombre', valor)}
           />
@@ -87,6 +89,8 @@ const VisConfPerfil = () => {
           <TextInput
             style={styles.textBox}
             placeholder='Empresa'
+            placeholderTextColor='#0a0a0aff'
+            fontWeight='900'
             value={perfil?.perEmpresa}
             onChangeText={(valor) => actualizar('perEmpresa', valor)}
           />
@@ -96,6 +100,8 @@ const VisConfPerfil = () => {
           <TextInput
             style={styles.textBox}
             placeholder='Dirección'
+            placeholderTextColor='#0a0a0aff'
+            fontWeight='900'
             value={perfil?.perDireccion}
             onChangeText={(valor) => actualizar('perDireccion', valor)}
           />
@@ -105,17 +111,19 @@ const VisConfPerfil = () => {
           <TextInput
             style={styles.textBox}
             placeholder='Teléfono'
+            placeholderTextColor='#0a0a0aff'
+            fontWeight='900'
             keyboardType='numeric'
             value={perfil?.perTel}
             onChangeText={(valor) => actualizar('perTel', valor)}
           />
         </View>
-
-        <TouchableOpacity style={styles.guardar} onPress={modificarPerfil}>
-          <Text style={{ textAlign: 'center', fontWeight: 700, fontSize: 18 }}>Guardar cambios</Text>
-        </TouchableOpacity>
-
       </View>
+      <TouchableOpacity style={styles.guardar} onPress={modificarPerfil}>
+        <Text style={{ textAlign: 'center', fontWeight: 700, fontSize: 18 }}>Guardar cambios</Text>
+      </TouchableOpacity>
+
+
     </KeyboardAvoidingView>
   )
 };
@@ -136,16 +144,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#F3F3F3',
     width: 330,
-    height: 420,
+    height: 480,
     borderRadius: 30,
-    flex: 1
+    padding: 15
   },
 
   guardar: {
     backgroundColor: '#3498db',
     borderRadius: 20,
     margin: 20,
-    padding: 15
+    padding: 15,
   },
 
   foto: {
@@ -166,4 +174,12 @@ const styles = StyleSheet.create({
     width: 15,
     marginLeft: 5,
   },
+
+  textBox: {
+    backgroundColor: '#ffffffff',
+    width: 200,
+    textAlign: 'center',
+    padding: 10,
+    borderRadius: 10,
+  }
 })
