@@ -9,6 +9,7 @@ import VisAgregarLaptop from './VisAgregarLaptop';
 import VisPerAdmin from './VisPerAdmin';
 import VisVerLaptop from './VisVerLaptop';
 import VisUbication from './VisUbication';
+import VisConfPerfilAdmin from './VisConfPerfilAdmin';
 
 const Tabs = createBottomTabNavigator();
 const Stacks = createStackNavigator();
@@ -74,6 +75,7 @@ const VisInicioAdmin = () => {
       <Stacks.Screen name='Menu' component={Menu}/>
       <Stacks.Screen name='AgregarLaptop' component={VisAgregarLaptop}/>
       <Stacks.Screen name='ViVerlaptop' component={VisVerLaptop}/>
+      <Stacks.Screen name='ConfiPerfil' component={VisConfPerfilAdmin}/>
     </Stacks.Navigator>
   )
 }

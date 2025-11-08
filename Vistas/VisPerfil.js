@@ -84,7 +84,7 @@ const VisPerfil = (props) => {
                   source={
                     perfil?.imgPerfil
                       ? { uri: perfil.imgPerfil }
-                      : require('../assets/icons/user-temporal.png') // o algún icono local
+                      : require('../assets/icons/user-temporal.png') 
                   }
                 />
                 <View style={{ paddingTop: 10 }}>
