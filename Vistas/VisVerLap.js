@@ -41,12 +41,12 @@ const VisVerLap = () => {
     <KeyboardAvoidingView style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top }}>
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
         <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
-        <Text style={{ marginLeft: 8, fontWeight: 700 }}>regresar</Text>
+        <Text style={{ marginLeft: '8', fontWeight: '700' }}>regresar</Text>
       </TouchableOpacity>
       <View style={{ padding: 40 }}>
         <View style={styles.containersecondary}>
-          <Image source={require('../images/imaLaptops/LaptopAcer.png')} style={styles.picture}></Image>
-          <View style={{ paddingTop: 16 }}>
+          <Image source={{uri: laptop.imgLap}} style={styles.picture}/>
+          <View style={{ paddingTop: '16' }}>
             <Text style={styles.texto}>{laptop.lapModelo}</Text>
             <Text style={styles.texto}>{laptop.lapRam}</Text>
             <Text style={styles.texto}>{laptop.lapOs}</Text>
@@ -76,6 +76,8 @@ const styles = StyleSheet.create({
     height: 150,
     width: 150,
     alignSelf: 'center',
+    borderRadius: 30,
+    paddingTop: 12
   },
 
   texto: {

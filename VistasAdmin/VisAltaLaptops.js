@@ -23,13 +23,15 @@ const VisAltaLaptops = () => {
         const {
           lapModelo,
           lapCpu,
-          lapOs
+          lapOs,
+          imgLap
         } = doc.data()
         Datos.push({
           id: doc.id, // Aguarda el id de la laptop generada por firebase
           lapModelo,
           lapCpu,
-          lapOs
+          lapOs,
+          imgLap
         });
       });
       setlaptop(Datos);
@@ -53,7 +55,7 @@ const VisAltaLaptops = () => {
               onPress={() => navigation.navigate('ViVerlaptop', { lapId: item.id})} // pasa el id a la siguiente vista de VisVerLaptop
             >
               <Image
-                source={require('../images/imaLaptops/LaptopAcer.png')}
+                source={{uri : item.imgLap}}
                 style={styles.picture}
               />
               <View style={{ paddingTop: 13 }}>
@@ -103,6 +105,8 @@ const styles = StyleSheet.create({
   picture: {
     width: 100,
     height: 100,
+    borderRadius: 10,
+    paddingTop: 12
   },
 
   textCharacteristics: {

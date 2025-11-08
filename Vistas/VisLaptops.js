@@ -23,13 +23,15 @@ const VisLaptops = () => {
         const {
           lapModelo,
           lapCpu,
-          lapOs
+          lapOs,
+          imgLap
         } = doc.data()
         Datos.push({
           id: doc.id,
           lapModelo,
           lapCpu,
-          lapOs
+          lapOs,
+          imgLap
         });
       });
       setlaptop(Datos);
@@ -43,7 +45,7 @@ const VisLaptops = () => {
         <Text style={styles.textVenta}>Laptops de venta</Text>
 
         {laptop.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 20 }}>No hay laptops registradas</Text>
+          <Text style={{ textAlign: 'center', marginTop: '20' }}>No hay laptops registradas</Text>
         ) : (
           laptop.map((item, index) => (
             <TouchableOpacity
@@ -52,7 +54,7 @@ const VisLaptops = () => {
               onPress={() => navigation.navigate('VisVerLap', { lapId: item.id })}
             >
               <Image
-                source={require('../images/imaLaptops/LaptopAcer.png')}
+                source={{uri : item.imgLap}}
                 style={styles.picture}
               />
               <View style={{ paddingTop: 13 }}>
@@ -98,6 +100,8 @@ const styles = StyleSheet.create({
   picture: {
     width: 100,
     height: 100,
+    borderRadius: 10,
+    paddingTop: 12
   },
 
   textCharacteristics: {

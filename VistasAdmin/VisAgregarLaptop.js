@@ -3,11 +3,17 @@ import React, { useState } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import conexion from '../Acceso/Firebase';
+import { Avatar } from 'react-native-elements';
+import * as ImagePicker from 'expo-image-picker';
 
 const VisAgregarLaptop = () => {
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const cloudName = 'dfo7xkwo9';
+  const uploadPreset = 'imgParaLM';
 
   const [laptop, setlaptop] = useState({
     lapModelo: '',
@@ -23,7 +29,28 @@ const VisAgregarLaptop = () => {
     setlaptop({ ...laptop, [campo]: valor })
   }
 
+  const pickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8
+      })
+
+      if (!result.canceled) {
+        setImage(result.assets[0].uri)
+      }
+    } catch (error) {
+      Alert.alert("No se pudo seleccionar imagen", error)
+    }
+  }
+
   const publicarLaptop = async () => {
+
+    if (!image) {
+      Alert.alert("Imagen requerida", "Favor de seleccionar una foto para laptop")
+    }
 
     if (laptop.lapModelo === '' || laptop.lapRam === '' || laptop.lapOs === '' || laptop.lapCpu === '' || laptop.lapGrafica === '' || laptop.lapDisco === '' || laptop.lapPrecio === '') {
       Alert.alert("Campo incompletos", "Favor de llenar todos los campos")
@@ -31,14 +58,36 @@ const VisAgregarLaptop = () => {
     }
 
     try {
-       const docRef = await conexion.collection('tblLaptops').add({
+
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", {
+        uri: image,
+        type: "image/jpeg",
+        name: `laptop_${Date.now()}.jpg`,
+      });
+      formData.append("upload_preset", uploadPreset);
+      formData.append("folder", "laptops");
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      // console.log("Resultado", result)
+      setUploading(false);
+
+      const docRef = await conexion.collection('tblLaptops').add({
         lapModelo: laptop.lapModelo,
         lapRam: laptop.lapRam,
         lapOs: laptop.lapOs,
         lapCpu: laptop.lapCpu,
         lapGrafica: laptop.lapGrafica,
         lapDisco: laptop.lapDisco,
-        lapPrecio: laptop.lapPrecio
+        lapPrecio: laptop.lapPrecio,
+        imgLap: result.secure_url,
+        fechaDeRegistro: new Date()
       });
 
       await conexion.collection('tblLaptops').doc(docRef.id).update({
@@ -63,8 +112,15 @@ const VisAgregarLaptop = () => {
         <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
         <Text style={{ marginLeft: 8, fontWeight: '700' }}>regresar</Text>
       </TouchableOpacity>
-
       <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
+        <TouchableOpacity onPress={pickImage}>
+          <Avatar
+            style={styles.foto}
+            rounded
+            size='xlarge'
+            source={image ? { uri: image } : require('../assets/icons/user-temporal.png')}
+          />
+        </TouchableOpacity>
         <View style={{ paddingTop: 15 }}>
           <TextInput
             style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
