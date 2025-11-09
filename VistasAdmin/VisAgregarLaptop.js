@@ -42,14 +42,14 @@ const VisAgregarLaptop = () => {
         setImage(result.assets[0].uri)
       }
     } catch (error) {
-      Alert.alert("No se pudo seleccionar imagen", error)
+      Alert.alert("No se pudo seleccionar imagen", error.message)
     }
   }
 
   const publicarLaptop = async () => {
-
     if (!image) {
       Alert.alert("Imagen requerida", "Favor de seleccionar una foto para laptop")
+      return; // ← CORREGIDO: agregar return
     }
 
     if (laptop.lapModelo === '' || laptop.lapRam === '' || laptop.lapOs === '' || laptop.lapCpu === '' || laptop.lapGrafica === '' || laptop.lapDisco === '' || laptop.lapPrecio === '') {
@@ -58,7 +58,6 @@ const VisAgregarLaptop = () => {
     }
 
     try {
-
       setUploading(true);
       const formData = new FormData();
       formData.append("file", {
@@ -75,7 +74,6 @@ const VisAgregarLaptop = () => {
       });
 
       const result = await response.json();
-      // console.log("Resultado", result)
       setUploading(false);
 
       const docRef = await conexion.collection('tblLaptops').add({
@@ -97,113 +95,140 @@ const VisAgregarLaptop = () => {
       Alert.alert("Exitoso", "Laptop registrada exitosamente")
       navigation.navigate("Menu");
     } catch (err) {
-      console.log("Error", err)
       console.error("Error al mostrar equipos", err)
+      Alert.alert("Error", "No se pudo registrar la laptop")
+      setUploading(false);
     }
   }
 
-
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', padding: insets.top, marginBottom: insets.bottom }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Ayuda a que no tape el formulario con la propiedad platform.os y hace una comparativa si es un disposivo android o ios
+      style={[styles.all, { padding: insets.top, marginBottom: insets.bottom }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
-        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
-        <Text style={{ marginLeft: 8, fontWeight: '700' }}>regresar</Text>
+        <Image 
+          style={styles.flechaIzquierda} 
+          source={require('../assets/icons/flecha-izquierda.png')} 
+        />
+        <Text style={styles.textBack}>regresar</Text>
       </TouchableOpacity>
-      <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
+      
+      <ScrollView style={styles.inputContainer}>
         <TouchableOpacity onPress={pickImage}>
           <Avatar
             style={styles.foto}
             rounded
-            size='xlarge'
+            size={'xlarge'}
             source={image ? { uri: image } : require('../assets/icons/user-temporal.png')}
           />
         </TouchableOpacity>
-        <View style={{ paddingTop: 15 }}>
+        
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='Modelo'
             placeholderTextColor={'#0a0a0aff'}
-            value={laptop?.lapModelo}
+            value={laptop.lapModelo}
             onChangeText={(valor) => caracteristicas('lapModelo', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='RAM'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapRam}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapRam}
             onChangeText={(valor) => caracteristicas('lapRam', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='Sistema operativo'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapOs}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapOs}
             onChangeText={(valor) => caracteristicas('lapOs', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='Procesador'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapCpu}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapCpu}
             onChangeText={(valor) => caracteristicas('lapCpu', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='¿Incluye graficos?'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapGrafica}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapGrafica}
             onChangeText={(valor) => caracteristicas('lapGrafica', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
+        <View style={styles.espaciados}>
           <TextInput
-            style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+            style={styles.textBox}
             placeholder='Disco duro'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapDisco}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapDisco}
             onChangeText={(valor) => caracteristicas("lapDisco", valor)}
           />
         </View>
 
-        <View style={{ paddingTop: 15 }}>
-          <TextInput style={[styles.textBox, { backgroundColor: '#ffffffff', fontWeight: '900' }]}
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Precio'
-            keyboardType='numeric'
-            placeholderTextColor='#0a0a0aff'
-            value={laptop?.lapPrecio}
+            keyboardType={'numeric'}
+            placeholderTextColor={'#0a0a0aff'}
+            value={laptop.lapPrecio}
             onChangeText={(valor) => caracteristicas("lapPrecio", valor)}
           />
         </View>
 
       </ScrollView>
-      <TouchableOpacity style={styles.buttomRegister} onPress={() => publicarLaptop()}>
-        <Text style={styles.textRegister}>Publicar laptop</Text>
+      
+      <TouchableOpacity 
+        style={[
+          styles.buttomRegister, 
+          uploading && styles.buttomDisabled
+        ]} 
+        onPress={publicarLaptop}
+        disabled={uploading}
+      >
+        <Text style={styles.textRegister}>
+          {uploading ? 'Subiendo...' : 'Publicar laptop'}
+        </Text>
       </TouchableOpacity>
 
-    </KeyboardAvoidingView >
-
+    </KeyboardAvoidingView>
   )
 }
 
 export default VisAgregarLaptop
 
 const styles = StyleSheet.create({
+  all: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF'
+  },
+  textBack: {
+    marginLeft: 8,
+    fontWeight: '700'
+  },
+  espaciados: {
+    paddingTop: 15
+  },
   inputContainer: {
     backgroundColor: '#F3F3F3',
     borderRadius: 30,
@@ -211,13 +236,11 @@ const styles = StyleSheet.create({
     padding: 15,
     flexGrow: 1
   },
-
   flechaIzquierda: {
     height: 16,
     width: 15,
     marginLeft: 5,
   },
-
   foto: {
     width: 100,
     height: 100,
@@ -227,7 +250,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#D9D9D9',
     alignSelf: 'center',
   },
-
   textBox: {
     height: 60,
     alignSelf: 'center',
@@ -236,8 +258,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 15,
     borderRadius: 15,
+    backgroundColor: '#ffffffff',
+    fontWeight: '900'
   },
-
   buttomRegister: {
     backgroundColor: '#5B40F2',
     width: 320,
@@ -245,15 +268,16 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginTop: 16,
   },
-
+  buttomDisabled: {
+    backgroundColor: '#cccccc'
+  },
   textRegister: {
     alignSelf: 'center',
     padding: 15,
-    fontWeight: 900,
+    fontWeight: '900',
     color: '#ffffffff',
     fontSize: 16
   },
-
   contenedor: {
     flexDirection: 'row',
     flexWrap: 'wrap',

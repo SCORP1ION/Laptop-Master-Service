@@ -1,4 +1,3 @@
-
 import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform, Image, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { Avatar } from 'react-native-elements';
@@ -6,13 +5,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import conexion, { auth } from '../Acceso/Firebase';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 
 const VisRegister = (props) => {
 
   const [image, setImage] = useState(null);
   const [uploading, setUploading] = useState(false);
-
   const cloudName = 'dfo7xkwo9';
   const uploadPreset = 'imgParaLM';
 
@@ -24,7 +21,6 @@ const VisRegister = (props) => {
         aspect: [4, 3],
         quality: 0.8,
       });
-
       if (!result.canceled) {
         setImage(result.assets[0].uri);
       }
@@ -40,7 +36,7 @@ const VisRegister = (props) => {
     perTel: '',
     perEmail: '',
     contraseña: "",
-    confirContraseña: ""
+    confirContraseña: "",
   });
 
   const InsertarValor = (campo, valor) => {
@@ -48,31 +44,34 @@ const VisRegister = (props) => {
   }
 
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
 
   const handleRegister = async () => {
-
     if (!image) {
       Alert.alert("Imagen requerida", "Selecciona una foto de perfil.");
       return;
     }
-
-    if (!perfil.perNombre || !perfil.perEmpresa || !perfil.perDireccion || !perfil.perTel || !perfil.perEmail) {
+    if (!perfil.perNombre || !perfil.perEmpresa || !perfil.perDireccion || !perfil.perTel || !perfil.perEmail || !perfil.contraseña || !perfil.confirContraseña) {
       Alert.alert("Error", "Completa todos los campos");
       return;
     }
-
     if (perfil.contraseña !== perfil.confirContraseña) {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
-
+    if (perfil.contraseña.length < 6) { // Valida que sea mas de 6 caracteres la contraseña
+      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres");
+      return;
+    }
+    
     try {
-      // 1. Crear el usuario
+      setUploading(true);
+      
+      // 1. Crear el usuario en Firebase Auth
       const userCredential = await auth.createUserWithEmailAndPassword(perfil.perEmail, perfil.contraseña);
       const user = userCredential.user;
-
-      // 2. Subir imagen usando UID como nombre y carpeta "perfil"
-      setUploading(true);
+      
+      // 2. Subir imagen a Cloudinary
       const formData = new FormData();
       formData.append("file", {
         uri: image,
@@ -87,11 +86,13 @@ const VisRegister = (props) => {
         body: formData
       });
 
-      const result = await response.json();
-      // console.log("Resultado", result)
-      setUploading(false);
+      if (!response.ok) {
+        throw new Error('Error al subir la imagen');
+      }
 
-      // 3. Guardar datos del perfil + URL de la imagen
+      const result = await response.json();
+
+      // 3. Guardar datos del perfil + URL de la imagen en Firestore
       await conexion.collection("tblPerfil").doc(user.uid).set({
         perNombre: perfil.perNombre,
         perEmpresa: perfil.perEmpresa,
@@ -99,31 +100,32 @@ const VisRegister = (props) => {
         perTel: perfil.perTel,
         perEmail: perfil.perEmail,
         role: "user",
-        imgPerfil: result.secure_url // IMPORTANTE
+        imgPerfil: result.secure_url,
+        fechaRegistro: new Date()
       });
 
       Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada");
       navigation.replace("VLogin");
 
     } catch (error) {
-      setUploading(false);
+      console.log("Error completo:", error);
       Alert.alert("Error", error.message);
-      console.log(error);
+    } finally {
+      setUploading(false);
     }
   };
 
-  const insets = useSafeAreaInsets();
-
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', padding: insets.top, marginBottom: insets.bottom }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // Ayuda a que no tape el formulario con la propiedad platform.os y hace una comparativa si es un disposivo android o ios
+      style={[styles.container, { padding: insets.top, marginBottom: insets.bottom }]}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <TouchableOpacity style={styles.contenedor} onPress={() => navigation.goBack()}>
-        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')}></Image>
-        <Text style={{ marginLeft: '8', fontWeight: '700' }}>regresar</Text>
+        <Image style={styles.flechaIzquierda} source={require('../assets/icons/flecha-izquierda.png')} />
+        <Text style={styles.textBack}>regresar</Text>
       </TouchableOpacity>
-      <ScrollView style={styles.inputContainer}> {/* usamos ScrollView contenedor desplazante para que el usuario pueda ver el contenido*/}
+      
+      <ScrollView style={styles.inputContainer} contentContainerStyle={styles.scrollContent}>
         <TouchableOpacity onPress={pickImage}>
           <Avatar
             style={styles.foto}
@@ -133,88 +135,93 @@ const VisRegister = (props) => {
           />
         </TouchableOpacity>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Nombre'
             placeholderTextColor={'#0a0a0aff'}
-            value={perfil?.perNombre}
+            value={perfil.perNombre}
             onChangeText={(valor) => InsertarValor('perNombre', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Nombre empresa'
-            placeholderTextColor='#0a0a0aff'
-            value={perfil?.perEmpresa}
+            placeholderTextColor={'#0a0a0aff'}
+            value={perfil.perEmpresa}
             onChangeText={(valor) => InsertarValor('perEmpresa', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Direccion'
-            placeholderTextColor='#0a0a0aff'
-            value={perfil?.perDireccion}
+            placeholderTextColor={'#0a0a0aff'}
+            value={perfil.perDireccion}
             onChangeText={(valor) => InsertarValor('perDireccion', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Numero telefonico'
-            placeholderTextColor='#0a0a0aff'
+            placeholderTextColor={'#0a0a0aff'}
             keyboardType='numeric'
-            value={perfil?.perTel}
+            value={perfil.perTel}
             onChangeText={(valor) => InsertarValor('perTel', valor)}
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Correo'
-            placeholderTextColor='#0a0a0aff'
-            value={perfil?.perEmail}
+            placeholderTextColor={'#0a0a0aff'}
+            value={perfil.perEmail}
             onChangeText={(valor) => InsertarValor('perEmail', valor)}
+            autoCapitalize='none'
+            keyboardType='email-address'
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Contraseña'
-            placeholderTextColor='#0a0a0aff'
-            value={perfil?.contraseña}
+            placeholderTextColor={'#0a0a0aff'}
+            value={perfil.contraseña}
             onChangeText={(valor) => InsertarValor("contraseña", valor)}
             secureTextEntry
           />
         </View>
 
-        <View style={{ paddingTop: '15' }}>
-          <TextInput style={[styles.textBox, { fontWeight: '900' }]}
-            backgroundColor='#ffffffff'
+        <View style={styles.espaciados}>
+          <TextInput 
+            style={styles.textBox}
             placeholder='Confirmar contraseña'
-            placeholderTextColor='#0a0a0aff'
-            value={perfil?.confirContraseña}
+            placeholderTextColor={'#0a0a0aff'}
+            value={perfil.confirContraseña}
             onChangeText={(valor) => InsertarValor("confirContraseña", valor)}
             secureTextEntry
           />
         </View>
 
       </ScrollView>
-      <TouchableOpacity style={[styles.buttomRegister, uploading && { opacity: 0.6 }]}
+      
+      <TouchableOpacity 
+        style={[styles.buttomRegister, uploading && styles.buttonDisabled]}
         onPress={handleRegister}
         disabled={uploading}
       >
-        {uploading ?
-          (<ActivityIndicator size='small' color='#fff' />) : (
-            <Text style={styles.textRegister}>Crear cuenta</Text>
-          )}
+        {uploading ? (
+          <ActivityIndicator size='small' color='#fff' />
+        ) : (
+          <Text style={styles.textRegister}>Crear cuenta</Text>
+        )}
       </TouchableOpacity>
     </KeyboardAvoidingView>
   )
@@ -223,15 +230,24 @@ const VisRegister = (props) => {
 export default VisRegister
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF'
+  },
   inputContainer: {
     backgroundColor: '#F3F3F3',
     borderRadius: 30,
     width: 330,
-    height: 480,
     padding: 15,
     flexGrow: 1
   },
-
+  scrollContent: {
+    flexGrow: 1
+  },
+  espaciados: {
+    padding: 8
+  },
   foto: {
     width: 100,
     height: 100,
@@ -240,43 +256,49 @@ const styles = StyleSheet.create({
     borderColor: '#5312ebf6',
     backgroundColor: '#D9D9D9',
     alignSelf: 'center',
+    marginBottom: 15
   },
-
   textBox: {
+    backgroundColor: '#ffffff',
     height: 60,
+    fontWeight: '900',
     alignSelf: 'center',
     borderWidth: 2,
-    width: 320,
+    width: 300,
     textAlign: 'center',
-    marginTop: 15,
     borderRadius: 15,
   },
-
   buttomRegister: {
     backgroundColor: '#5B40F2',
     width: 320,
     height: 50,
     borderRadius: 16,
     marginTop: 16,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-
+  buttonDisabled: {
+    opacity: 0.6
+  },
   textRegister: {
-    alignSelf: 'center',
-    padding: 15,
-    fontWeight: 900,
-    color: '#ffffffff',
+    fontWeight: '900',
+    color: '#ffffff',
     fontSize: 16
   },
-
   contenedor: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignSelf: 'flex-start',
-    marginTop: 9
+    marginTop: 9,
+    alignItems: 'center'
   },
   flechaIzquierda: {
     height: 16,
     width: 15,
     marginLeft: 5,
   },
+  textBack: {
+    marginLeft: 8,
+    fontWeight: '700'
+  }
 })

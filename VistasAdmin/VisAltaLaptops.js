@@ -46,7 +46,7 @@ const VisAltaLaptops = () => {
         <Text style={styles.textVenta}>Laptops de venta</Text>
 
         {laptop.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 20, fontSize: 16, fontWeight: '900' }}>No hay laptops registradas</Text>
+          <Text style={{ textAlign: 'center', marginTop: '20', fontSize: '16', fontWeight: '900' }}>No hay laptops registradas</Text>
         ) : (
           laptop.map((item, index) => (
             <TouchableOpacity
@@ -58,7 +58,7 @@ const VisAltaLaptops = () => {
                 source={{uri : item.imgLap}}
                 style={styles.picture}
               />
-              <View style={{ paddingTop: 13 }}>
+              <View style={{ paddingTop: '13' }}>
                 <Text style={styles.textCharacteristics}>{item.lapModelo}</Text>
                 <Text style={styles.textCharacteristics}>{item.lapCpu}</Text>
                 <Text style={styles.textCharacteristics}>{item.lapOs}</Text>
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
 
   textCharacteristics: {
-    fontWeight: 700,
+    fontWeight: '700',
     color: '#ffffffff',
     paddingLeft: 0,
     paddingTop: 8,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 12,
     fontSize: 16,
-    fontWeight: 900,
+    fontWeight: '900',
   },
 
   agregar: {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   textAdd: {
     fontSize: 15,
     textAlign: 'center',
-    fontWeight: 900,
+    fontWeight: '900',
     color: 'white'
   }
 })

@@ -64,7 +64,7 @@ const VisPerAdmin = () => {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top }}>
-      <Text style={{ fontSize: 18, fontWeight: 700, padding: 15, alignSelf: 'center' }}>Perfil</Text>
+      <Text style={{ fontSize: '18', fontWeight: '700', padding: '15', alignSelf: 'center' }}>Perfil</Text>
       <View style={styles.container}>
         {
           perfil.map((perfil) => {
