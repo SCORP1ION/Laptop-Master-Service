@@ -14,81 +14,51 @@ const VisLogin = (props) => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      if (user) {
-        props.navigation.navigate("Vinicio")
-      }
-    })
-
-    return unsubscribe
-  }, [])
-
+    // No navegues aquí, solo escucha cambios si quieres.
+    const unsubscribe = auth.onAuthStateChanged(() => { });
+    return unsubscribe;
+  }, []);
+  
   const handleLogin = () => {
+    // Al stack valida el usaurio y lo manda para la vista correspondiente
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(async userCredentials => {
-        const user = userCredentials.user;
-        console.log('Logged in with:', user.uid);
+      .catch(error => alert(error.message));
+  };
 
-        try {
-          const userAdmin = conexion.collection('tblAdministrador').doc(user?.uid)
-          const adminDoc = await userAdmin.get();
-          if (adminDoc.exists) {
-            console.log("administrador")
-            navigation.navigate('ViAdmin');
-            return;
-          } 
+  // const handleGoogleSigingIn = () => {
+  //   const config = {
+  //     webClientId: '777378638584-betf6kva5smtn1tur9cubf7dmi5iun85.apps.googleusercontent.com',
+  //   };
+  //   Google
+  //     .logInAsync(config)
+  //     .then((result) => {
+  //       const { type, user } = result;
+  //       console.log(error)
+  //       if (type == 'success') {
+  //         const { email, name, photoUrl } = user;
+  //         setTimeout(() => props.navigate('Vinicio', { email, name, photoUrl }), 1000)
+  //         handleMessage('Google signing success', 'success')
+  //         navigation.replace("Vinicio")
+  //       } else {
+  //         handleMessage('Google siging canceled', 'prueba')
+  //       }
+  //       setGoogleSubmitting(false);
 
-          const users = conexion.collection('tblPerfil').doc(user?.uid);
-          const userDoc = await users.get();
+  //     })
+  //     .catch(error => {
+  //       console.log(error)
+  //       handleMessage('A ocurrudo un error, verificar su red e intentar nuevamente')
+  //       setGoogleSubmitting(false);
 
-          if(userDoc.exists){
-            console.log("usuario")
-            navigation.navigate('Vinicio')
-          }
+  //     })
 
-        } catch (err) {
-          console.error("Error de registro:", err)
-        }
+  //   const handleMessage = (message, type = 'failed') => {
+  //     setMessage(message);
+  //     setMessageType(type);
+  //   };
 
-
-      })
-      .catch(error => alert(error.message))
-  }
-
-  const handleGoogleSigingIn = () => {
-    const config = {
-      webClientId: '777378638584-betf6kva5smtn1tur9cubf7dmi5iun85.apps.googleusercontent.com',
-    };
-    Google
-      .logInAsync(config)
-      .then((result) => {
-        const { type, user } = result;
-        console.log(error)
-        if (type == 'success') {
-          const { email, name, photoUrl } = user;
-          setTimeout(() => props.navigate('Vinicio', { email, name, photoUrl }), 1000)
-          handleMessage('Google signing success', 'success')
-          navigation.replace("Vinicio")
-        } else {
-          handleMessage('Google siging canceled', 'prueba')
-        }
-        setGoogleSubmitting(false);
-
-      })
-      .catch(error => {
-        console.log(error)
-        handleMessage('A ocurrudo un error, verificar su red e intentar nuevamente')
-        setGoogleSubmitting(false);
-
-      })
-
-    const handleMessage = (message, type = 'failed') => {
-      setMessage(message);
-      setMessageType(type);
-    };
-
-  }
+  // }
 
   return (
     <KeyboardAvoidingView

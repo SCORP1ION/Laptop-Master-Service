@@ -20,12 +20,12 @@ const VisPerAdmin = () => {
   const consultaPerfil = async () => {
     try {
       const user = auth.currentUser;
-      if(!user){
+      if (!user) {
         Alert.alert("Error", "Usuario no encontrado")
         return
       }
       const doc = await conexion.collection('tblAdministrador').doc(user?.uid).get();
-      if(doc.exists){
+      if (doc.exists) {
         const data = doc.data();
         setPerfil([{
           uid: user.uid,
@@ -37,12 +37,12 @@ const VisPerAdmin = () => {
           perTel: data.perTel,
           imgPerfil: data.imgPerfil || null
         }])
-      }else{
+      } else {
         Alert.alert("Error", "No se encontro perfil de este usuario")
       }
 
     } catch (err) {
-      console.error("Error al consultar",err)
+      console.error("Error al consultar", err)
     }
   }
 
@@ -50,7 +50,6 @@ const VisPerAdmin = () => {
   const logout = async () => {
     try {
       await auth.signOut() // signOut funcion que cierre sesion con el auth de firebase.
-      navigation.replace('VLogin'); // Con el replace, lo mandamos el login.
     } catch (err) {
       console.error("Error al cerrar sesion", err)
     }
