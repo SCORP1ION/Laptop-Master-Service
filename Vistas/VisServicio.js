@@ -24,7 +24,7 @@ const VisServicio = () => {
         Alert.alert("Error", "Usuario no encontrado")
         return
       }
-      await conexion.collection('tblServicio').add({
+      const serRefence = await conexion.collection('tblServicio').add({
         serProblema: service.serProblema,
         serHorario: service.serHorario,
         serNumber: service.serNumber,
@@ -32,6 +32,10 @@ const VisServicio = () => {
         userId: user.uid,
         fecha: new Date()
       });
+      await conexion.collection('tblServicio').doc(serRefence.id).update({
+        serId: serRefence.id
+      })
+     // console.log("Nuevo servivio",serRefence)
       Alert.alert("Exitoso", "Servicio enviado");
       setService({
         serProblema: '',
@@ -48,7 +52,7 @@ const VisServicio = () => {
   const confirmarServicio = () => {
     Alert.alert(
       'Nota',
-      'La visita del servicio tendrá un costo de $350 + revisión, instalación o solución de un problema',
+      'La visita del servicio tendrá un costo de $650 + revisión, instalación o solución de un problema',
       [
         { text: 'Confirmar', onPress: () => ingresarServicio() },
         { text: 'Cancelar', onPress: () => Alert.alert('Cancelado', 'Servicio cancelado') }
@@ -65,7 +69,7 @@ const VisServicio = () => {
         Formulario para servicio
       </Text>
 
-      <View style={styles.container}>
+      <View style={styles.conteiner}>
         <View style={{ padding: 15 }}>
           <TextInput
             style={styles.textBox}

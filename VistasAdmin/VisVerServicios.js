@@ -1,9 +1,13 @@
-import { StyleSheet, Text, View, FlatList, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Alert, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import conexion from '../Acceso/Firebase';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 const VisServicios = () => {
   const [servicios, setServicios] = useState([]);
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
 
   useEffect(() => {
     verServicios();
@@ -39,23 +43,28 @@ const VisServicios = () => {
   };
 
   const renderServicio = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("DetalleServicio", { serId: item.id })}>
       <Text style={styles.title}>Problema: {item.serProblema}</Text>
       <Text>Horario: {item.serHorario}</Text>
       <Text>Teléfono: {item.serNumber}</Text>
       <Text>Comentario: {item.serComment}</Text>
-    </View>
+    </TouchableOpacity>
   );
-
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <Text style={styles.header}>Lista de servicios</Text>
-      <FlatList
-        data={servicios}
-        keyExtractor={(item) => item.id}
-        renderItem={renderServicio}
-        contentContainerStyle={{ paddingBottom: 20 }}
-      />
+      {
+        servicios.length === 0 ? (
+          <Text style={{ textAlign: 'center', marginTop: 20, fontSize: '16', fontWeight: '900' }}>!Yuuuju no hay servicios pendientes!</Text>
+        ) : (
+          <FlatList
+            data={servicios}
+            keyExtractor={(item) => item.id}
+            renderItem={renderServicio}
+            contentContainerStyle={{ paddingBottom: 20 }}
+          />
+        )
+      }
     </View>
   );
 };
@@ -73,7 +82,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 15,
-    color: '#222feeff',
   },
   card: {
     backgroundColor: '#f3f4f6',
