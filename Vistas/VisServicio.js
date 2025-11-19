@@ -2,19 +2,21 @@ import { StyleSheet, Text, View, TextInput, Alert, TouchableOpacity, KeyboardAvo
 import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import conexion, { auth } from '../Acceso/Firebase';
+import { color } from 'react-native-elements/dist/helpers';
 
 const VisServicio = () => {
   const [service, setService] = useState({
+    serEquipo: '',
     serProblema: '',
     serHorario: '',
-    serNumber: '',
-    serComment: ''
+    serOpcion: '',
+    serSolucion: ''
   });
 
   const insets = useSafeAreaInsets();
 
   const ingresarServicio = async () => {
-    if (!service.serProblema || !service.serHorario || !service.serNumber || !service.serComment) {
+    if (!service.serProblema || !service.serHorario || !service.serOpcion || !service.serSolucion || !service.serEquipo) {
       Alert.alert("Error", "Favor de completar el formulario");
       return;
     }
@@ -25,10 +27,11 @@ const VisServicio = () => {
         return
       }
       const serRefence = await conexion.collection('tblServicio').add({
+        serEquipo: service.serEquipo,
         serProblema: service.serProblema,
         serHorario: service.serHorario,
-        serNumber: service.serNumber,
-        serComment: service.serComment,
+        serOpcion: service.serOpcion,
+        serSolucion: service.serSolucion,
         userId: user.uid,
         fecha: new Date()
       });
@@ -38,10 +41,11 @@ const VisServicio = () => {
      // console.log("Nuevo servivio",serRefence)
       Alert.alert("Exitoso", "Servicio enviado");
       setService({
+        serEquipo: '',
         serProblema: '',
         serHorario: '',
-        serNumber: '',
-        serComment: ''
+        serOpcion: '',
+        serSolucion: ''
       });
     } catch (err) {
       console.error("Error:", err);
@@ -59,64 +63,67 @@ const VisServicio = () => {
       ]
     );
   };
-
+let textcolor
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF', paddingTop: insets.top }}
       behavior='padding'
     >
       <Text style={{ fontSize: 18, fontWeight: '700', padding: 15, alignSelf: 'center' }}>
-        Formulario para servicio
+        Detalles del servicio
       </Text>
 
       <View style={styles.conteiner}>
         <View style={{ padding: 15 }}>
+          <Text style={styles.textPregunta}>¿Qué tipo de quipos presenta al falla?</Text>
           <TextInput
             style={styles.textBox}
-            placeholder='¿Cuál es el problema?'
-            fontWeight = {900} 
+            placeholder='Ej: computadora, impresora, router, etc.'
+            fontWeight = {700} 
+            placeholderTextColor={'#0a0a0aff'}
+            value={service.serEquipo}
+            onChangeText={(text) => setService({ ...service, serEquipo: text })}
+          />
+        </View>
+
+        <View style={{ padding: 15 }}>
+          <Text style={styles.textPregunta}>Descripción breve del problema</Text>
+          <TextInput
+            style={styles.textBox}
+            placeholder='Describe brevemente qué sucede con el equipo'
             placeholderTextColor='#0a0a0aff'
+            fontWeight = {700} 
             value={service.serProblema}
             onChangeText={(text) => setService({ ...service, serProblema: text })}
           />
         </View>
 
         <View style={{ padding: 15 }}>
+          <Text style={styles.textPregunta}>¿El problema es constante o intermitente?</Text>
           <TextInput
             style={styles.textBox}
-            placeholder='¿En qué horario podemos encontrarlo?'
+            placeholder='constante o intermitente'
+            fontWeight = {700}
             placeholderTextColor='#0a0a0aff'
-            fontWeight = {900} 
-            value={service.serHorario}
-            onChangeText={(text) => setService({ ...service, serHorario: text })}
+            value={service.serOpcion}
+            onChangeText={(text) => setService({ ...service, serOpcion: text })}
           />
         </View>
 
         <View style={{ padding: 15 }}>
+          <Text style={styles.textPregunta}>¿Intentaste algo antes del problema?</Text>
           <TextInput
             style={styles.textBox}
-            placeholder='¿Desea agregar otro número de teléfono?'
-            keyboardType='numeric'
-            fontWeight = {900}
+            placeholder="Si intentaste algo, ¿Que hiciste?"
+            fontWeight = {700}
             placeholderTextColor='#0a0a0aff'
-            value={service.serNumber}
-            onChangeText={(text) => setService({ ...service, serNumber: text })}
-          />
-        </View>
-
-        <View style={{ padding: 15 }}>
-          <TextInput
-            style={styles.textBox}
-            placeholder="Comentario opcional"
-            fontWeight = {900} 
-            placeholderTextColor='#0a0a0aff'
-            value={service.serComment}
-            onChangeText={(text) => setService({ ...service, serComment: text })}
+            value={service.serSolucion}
+            onChangeText={(text) => setService({ ...service, serSolucion: text })}
           />
         </View>
       </View>
 
-      <View style={{ width: '90%', paddingTop: 15 }}>
+      <View style={{ width: '90%', paddingTop: 15, paddingBottom: insets.bottom}}>
         <TouchableOpacity
           onPress={confirmarServicio}
           style={styles.bottomSave}
@@ -136,14 +143,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     backgroundColor: '#F3F3F3',
     width: 350,
-    height: 480,
+    height: 540,
     padding: 15,
     borderRadius: 30
   },
 
   textBox: {
+    backgroundColor: '#ffffffff',
     height: 60,
-    alignSelf: 'center',
     borderWidth: 2,
     width: 320,
     textAlign: 'center',
@@ -166,6 +173,9 @@ const styles = StyleSheet.create({
     fontWeight: 900,
     fontSize: 18,
     color: 'white'
+  },
+  textPregunta:{
+    fontSize: 15
   }
 
 })
