@@ -8,7 +8,6 @@ const VisServicio = () => {
   const [service, setService] = useState({
     serEquipo: '',
     serProblema: '',
-    serHorario: '',
     serOpcion: '',
     serSolucion: ''
   });
@@ -16,7 +15,7 @@ const VisServicio = () => {
   const insets = useSafeAreaInsets();
 
   const ingresarServicio = async () => {
-    if (!service.serProblema || !service.serHorario || !service.serOpcion || !service.serSolucion || !service.serEquipo) {
+    if (!service.serProblema || !service.serOpcion || !service.serSolucion || !service.serEquipo) {
       Alert.alert("Error", "Favor de completar el formulario");
       return;
     }
@@ -29,7 +28,6 @@ const VisServicio = () => {
       const serRefence = await conexion.collection('tblServicio').add({
         serEquipo: service.serEquipo,
         serProblema: service.serProblema,
-        serHorario: service.serHorario,
         serOpcion: service.serOpcion,
         serSolucion: service.serSolucion,
         userId: user.uid,
@@ -43,7 +41,6 @@ const VisServicio = () => {
       setService({
         serEquipo: '',
         serProblema: '',
-        serHorario: '',
         serOpcion: '',
         serSolucion: ''
       });

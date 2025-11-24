@@ -59,9 +59,9 @@ const VisAltaLaptops = () => {
                 style={styles.picture}
               />
               <View style={{ paddingTop: '13' }}>
-                <Text style={styles.textCharacteristics}>{item.lapModelo}</Text>
-                <Text style={styles.textCharacteristics}>{item.lapCpu}</Text>
-                <Text style={styles.textCharacteristics}>{item.lapOs}</Text>
+                <Text style={styles.textCharacteristics}>Modelo: {item.lapModelo}</Text>
+                <Text style={styles.textCharacteristics}>CPU: {item.lapCpu}</Text>
+                <Text style={styles.textCharacteristics}>Sistema: {item.lapOs}</Text>
               </View>
             </TouchableOpacity>
           ))

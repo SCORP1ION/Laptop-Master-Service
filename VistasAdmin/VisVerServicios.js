@@ -20,17 +20,15 @@ const VisServicios = () => {
       querySnapshot.forEach((doc) => {
         const {
           serProblema,
-          serNumber,
-          serHorario,
-          serComment,
+          fecha,
+          serEquipo,
           userId
         } = doc.data();
         Datos.push({
           id: doc.id,
           serProblema,
-          serNumber,
-          serHorario,
-          serComment,
+          fecha,
+          serEquipo,
           userId,
         });
       });
@@ -45,9 +43,7 @@ const VisServicios = () => {
   const renderServicio = ({ item }) => (
     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("DetalleServicio", { serId: item.id })}>
       <Text style={styles.title}>Problema: {item.serProblema}</Text>
-      <Text>Horario: {item.serHorario}</Text>
-      <Text>Teléfono: {item.serNumber}</Text>
-      <Text>Comentario: {item.serComment}</Text>
+      <Text>Tipo: {item.serEquipo}</Text>
     </TouchableOpacity>
   );
   return (

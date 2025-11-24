@@ -105,7 +105,7 @@ const VisRegister = (props) => {
       });
 
       Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada");
-      navigation.replace("VLogin");
+      // navigation.replace("VLogin");
 
     } catch (error) {
       console.log("Error completo:", error);

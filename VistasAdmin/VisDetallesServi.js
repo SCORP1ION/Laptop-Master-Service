@@ -69,9 +69,9 @@ const VisDetallesServi = () => {
         {servicio && (
           <>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, textAlign: 'center', marginBottom: 12 }}>Detalles del servicio</Text>
-            <Text style={styles.textos}>{servicio.serProblema}</Text>
-            <Text style={styles.textos}>{servicio.serHorario}</Text>
-            <Text style={styles.textos}>{servicio.serComment}</Text>
+            <Text style={styles.textos}>problema: {servicio.serProblema}</Text>
+            <Text style={styles.textos}>Concurrancia: {servicio.serOpcion}</Text>
+            <Text style={styles.textos}>Hizo algo antes: {servicio.serSolucion}</Text>
           </>
         )}
         {

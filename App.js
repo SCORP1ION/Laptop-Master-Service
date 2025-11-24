@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import conexion ,{ auth }from './Acceso/Firebase';
+import conexion, { auth } from './Acceso/Firebase';
 
 import VisLogin from './VistasLogin/VisLogin'; // Formulario para login
 import VisRegister from './VistasLogin/VisRegister'; // Register form
@@ -40,7 +40,7 @@ function App() {
   // null = cargando, "user", "admin", "none"
 
   React.useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+    auth.onAuthStateChanged(async (user) => {
       if (!user) {
         setUserType("none");
         return;
@@ -70,7 +70,6 @@ function App() {
       }
     });
 
-    return unsubscribe;
   }, []);
 
   if (userType === null) return null; // puedes poner pantalla loading

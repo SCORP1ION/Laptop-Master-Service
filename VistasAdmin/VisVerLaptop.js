@@ -72,13 +72,13 @@ const VisVerLaptop = () => {
         <View style={styles.containersecondary}>
           <Image source={{uri : laptop.imgLap}} style={styles.picture} />
           <View style={{ paddingTop: 16 }}>
-            <Text style={styles.texto}>{laptop.lapModelo}</Text>
-            <Text style={styles.texto}>{laptop.lapRam}</Text>
-            <Text style={styles.texto}>{laptop.lapOs}</Text>
-            <Text style={styles.texto}>{laptop.lapCpu}</Text>
-            <Text style={styles.texto}>{laptop.lapGrafica}</Text>
-            <Text style={styles.texto}>{laptop.lapDisco}</Text>
-            <Text style={styles.texto}>${laptop.lapPrecio}</Text>
+            <Text style={styles.texto}>Modelo: {laptop.lapModelo}</Text>
+            <Text style={styles.texto}>RAM: {laptop.lapRam}</Text>
+            <Text style={styles.texto}>OS: {laptop.lapOs}</Text>
+            <Text style={styles.texto}>CPU: {laptop.lapCpu}</Text>
+            <Text style={styles.texto}>¿Incluye grafia? {laptop.lapGrafica}</Text>
+            <Text style={styles.texto}>Disco duro: {laptop.lapDisco}</Text>
+            <Text style={styles.texto}>Precio: ${laptop.lapPrecio}</Text>
           </View>
         </View>
       </View>

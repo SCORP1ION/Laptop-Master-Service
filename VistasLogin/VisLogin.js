@@ -13,13 +13,15 @@ const VisLogin = (props) => {
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    // No navegues aquí, solo escucha cambios si quieres.
-    const unsubscribe = auth.onAuthStateChanged(() => { });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   // No navegues aquí, solo escucha cambios si quieres.
+  //   const unsubscribe = auth.onAuthStateChanged(() => { });
+  //   return unsubscribe;
+
+  // }, []);
   
   const handleLogin = () => {
+    console.log("Inicio exitoso") //<= depurando si entra la funcion
     // Al stack valida el usaurio y lo manda para la vista correspondiente
     auth
       .signInWithEmailAndPassword(email, password)
