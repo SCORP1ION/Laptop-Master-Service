@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TextInput, KeyboardAvoidingView, TouchableOpacity, Alert, Platform, Image, ActivityIndicator } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Avatar } from 'react-native-elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -51,10 +51,10 @@ const VisRegister = (props) => {
       Alert.alert("Imagen requerida", "Selecciona una foto de perfil.");
       return;
     }
-    if (!perfil.perNombre || !perfil.perEmpresa || !perfil.perDireccion || !perfil.perTel || !perfil.perEmail || !perfil.contraseña || !perfil.confirContraseña) {
-      Alert.alert("Error", "Completa todos los campos");
-      return;
-    }
+    // if (!perfil.perNombre || !perfil.perEmpresa || !perfil.perDireccion || !perfil.perTel || !perfil.perEmail || !perfil.contraseña || !perfil.confirContraseña) {
+    //   Alert.alert("Error", "Completa todos los campos");
+    //   return;
+    // }
     if (perfil.contraseña !== perfil.confirContraseña) {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
@@ -69,14 +69,14 @@ const VisRegister = (props) => {
       
       // 1. Crear el usuario en Firebase Auth
       const userCredential = await auth.createUserWithEmailAndPassword(perfil.perEmail, perfil.contraseña);
-      const user = userCredential.user;
+      const usuario = userCredential.user;
       
       // 2. Subir imagen a Cloudinary
       const formData = new FormData();
       formData.append("file", {
         uri: image,
         type: "image/jpeg",
-        name: `${user.uid}.jpg`,
+        name: `${usuario.uid}.jpg`,
       });
       formData.append("upload_preset", uploadPreset);
       formData.append("folder", "perfil");
@@ -93,7 +93,7 @@ const VisRegister = (props) => {
       const result = await response.json();
 
       // 3. Guardar datos del perfil + URL de la imagen en Firestore
-      await conexion.collection("tblPerfil").doc(user.uid).set({
+      await conexion.collection("tblPerfil").doc(usuario.uid).set({
         perNombre: perfil.perNombre,
         perEmpresa: perfil.perEmpresa,
         perDireccion: perfil.perDireccion,
@@ -104,8 +104,14 @@ const VisRegister = (props) => {
         fechaRegistro: new Date()
       });
 
-      Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada");
-      // navigation.replace("VLogin");
+      Alert.alert("Registro Exitoso", "Tu cuenta ha sido creada")
+      setTimeout(()=> {
+        auth.currentUser.reload();
+        props.navigation.replace('VLogin');
+      })
+      console.log("Usuario registrado con ID:", usuario.uid);
+      console.log("Email:", perfil.perEmail);
+      console.log("Contraseña:", perfil.contraseña)
 
     } catch (error) {
       console.log("Error completo:", error);

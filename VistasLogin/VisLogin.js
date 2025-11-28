@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import conexion, { auth } from '../Acceso/Firebase'
 import { useNavigation } from '@react-navigation/native';
@@ -11,56 +11,18 @@ const VisLogin = (props) => {
   const [message, setMessage] = useState();
   const [messageType, setMessageType] = useState();
 
-  const navigation = useNavigation();
-
-  // useEffect(() => {
-  //   // No navegues aquí, solo escucha cambios si quieres.
-  //   const unsubscribe = auth.onAuthStateChanged(() => { });
-  //   return unsubscribe;
-
-  // }, []);
-  
-  const handleLogin = () => {
-    console.log("Inicio exitoso") //<= depurando si entra la funcion
-    // Al stack valida el usaurio y lo manda para la vista correspondiente
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .catch(error => alert(error.message));
+  const handleLogin = async () => {
+    try {
+      await auth.signInWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log("Email: ", email," contraseña: ", password)
+    } catch (error) {
+      Alert.alert("Error", error.message)
+    }
   };
 
-  // const handleGoogleSigingIn = () => {
-  //   const config = {
-  //     webClientId: '777378638584-betf6kva5smtn1tur9cubf7dmi5iun85.apps.googleusercontent.com',
-  //   };
-  //   Google
-  //     .logInAsync(config)
-  //     .then((result) => {
-  //       const { type, user } = result;
-  //       console.log(error)
-  //       if (type == 'success') {
-  //         const { email, name, photoUrl } = user;
-  //         setTimeout(() => props.navigate('Vinicio', { email, name, photoUrl }), 1000)
-  //         handleMessage('Google signing success', 'success')
-  //         navigation.replace("Vinicio")
-  //       } else {
-  //         handleMessage('Google siging canceled', 'prueba')
-  //       }
-  //       setGoogleSubmitting(false);
-
-  //     })
-  //     .catch(error => {
-  //       console.log(error)
-  //       handleMessage('A ocurrudo un error, verificar su red e intentar nuevamente')
-  //       setGoogleSubmitting(false);
-
-  //     })
-
-  //   const handleMessage = (message, type = 'failed') => {
-  //     setMessage(message);
-  //     setMessageType(type);
-  //   };
-
-  // }
 
   return (
     <KeyboardAvoidingView

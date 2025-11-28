@@ -2,6 +2,8 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import conexion, { auth } from './Acceso/Firebase';
+import { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
 
 import VisLogin from './VistasLogin/VisLogin'; // Formulario para login
 import VisRegister from './VistasLogin/VisRegister'; // Register form
@@ -13,7 +15,7 @@ const Stack = createStackNavigator();
 function UsuarioStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='Vinicio' component={VisInicio} />
+      <Stack.Screen name='VisInicio' component={VisInicio} />
     </Stack.Navigator>
   )
 }
@@ -36,16 +38,11 @@ function AuthStack() {
 }
 
 function App() {
-  const [userType, setUserType] = React.useState(null);
+  const [userType, setUserType] = useState(null);
   // null = cargando, "user", "admin", "none"
 
-  React.useEffect(() => {
-    auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        setUserType("none");
-        return;
-      }
-
+  useEffect(() => {
+    const logueo = auth.onAuthStateChanged(async (user) => {
       try {
         // Buscar primero rol admin
         const adminRef = await conexion.collection("tblAdministrador").doc(user.uid).get();
@@ -70,9 +67,12 @@ function App() {
       }
     });
 
+    return logueo
   }, []);
 
-  if (userType === null) return null; // puedes poner pantalla loading
+  if (userType === null){
+    return <View><Text>Cargando...</Text></View>
+  } 
 
   return (
     <NavigationContainer>
